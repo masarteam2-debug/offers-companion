@@ -1,0 +1,1327 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>عرض لا يُرفض</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@500;600;700&display=swap">
+<style>
+body{margin:0}
+
+/* Layout: banknote-paper reading companion. Chapter rail on the right (RTL), one chapter per view, ~66ch reading column, tools set as "certificates" inside the column. */
+:root{
+  --paper:#EDF0E5; --paper-2:#E1E6D5; --card:#F6F8F1; --ink:#14281F; --ink-soft:#4C6055; --line:#C6CFBA;
+  --brass:#946419; --brass-soft:#E9DCC0; --green:#1E5A42; --green-soft:#D3E3D7; --red:#A23F2E; --red-soft:#F1D9D2;
+  --display:"Noto Kufi Arabic","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0F1813; --paper-2:#16221C; --card:#1A2821; --ink:#E3E9DE; --ink-soft:#9CAEA2; --line:#2B3B32;
+  --brass:#D8A64B; --brass-soft:#3A2F1A; --green:#63B58F; --green-soft:#1D3529; --red:#E58067; --red-soft:#3D221C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0F1813; --paper-2:#16221C; --card:#1A2821; --ink:#E3E9DE; --ink-soft:#9CAEA2; --line:#2B3B32;
+  --brass:#D8A64B; --brass-soft:#3A2F1A; --green:#63B58F; --green-soft:#1D3529; --red:#E58067; --red-soft:#3D221C; color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.app{direction:rtl;text-align:right}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.35;text-wrap:balance;margin:0;font-weight:600}
+p{margin:0}
+.en{direction:ltr;unicode-bidi:isolate;display:block;font-family:var(--mono);font-size:.78em;letter-spacing:.02em;color:var(--ink-soft);text-align:right}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--paper);border-bottom:1px solid var(--line);
+  padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:16px}
+.brand{font-family:var(--display);font-size:1.2rem;text-decoration:none;color:var(--ink);white-space:nowrap}
+.brand b{color:var(--brass);font-weight:700}
+.prog{flex:1;display:flex;align-items:center;gap:10px;justify-content:flex-end;min-width:0}
+.prog-bar{flex:0 1 220px;height:6px;border-radius:6px;background:var(--paper-2);overflow:hidden}
+.prog-bar i{display:block;height:100%;width:0;background:var(--green);transition:width .4s}
+.prog-txt{font-size:.85rem;color:var(--ink-soft);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* shell */
+.shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:40px;
+  padding-block:28px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 70px);align-self:start;max-height:calc(100vh - 90px);overflow:auto}
+.rail h4{font-size:.78rem;color:var(--brass);letter-spacing:.04em;margin:18px 0 6px}
+.rail h4:first-child{margin-top:0}
+.rail a{display:flex;gap:10px;align-items:baseline;padding:6px 10px;border-radius:8px;color:var(--ink);text-decoration:none;font-size:.95rem;line-height:1.5}
+.rail a .n{font-family:var(--mono);font-size:.75rem;color:var(--ink-soft);min-width:1.6em}
+.rail a:hover{background:var(--paper-2)}
+.rail a[aria-current="page"]{background:var(--ink);color:var(--paper)}
+.rail a[aria-current="page"] .n{color:var(--paper)}
+.rail a.done::after{content:"✓";margin-inline-start:auto;color:var(--green);font-weight:700}
+.rail a[aria-current="page"].done::after{color:var(--paper)}
+main{min-width:0;max-width:760px}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:minmax(0,1fr);gap:18px;padding-top:12px}
+  .rail{position:static;max-height:none;display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+  .rail h4{display:none}
+  .rail a{flex:0 0 auto;border:1px solid var(--line);white-space:nowrap}
+  .prog-bar{flex-basis:90px}
+}
+
+/* hero */
+.hero{position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card);padding:44px 32px 36px}
+.hero::before{content:"";position:absolute;inset:0;opacity:.55;pointer-events:none;
+  background:
+   repeating-radial-gradient(circle at 12% 120%, transparent 0 13px, var(--line) 13px 14px),
+   repeating-radial-gradient(circle at 105% -20%, transparent 0 17px, var(--brass-soft) 17px 18px);
+  -webkit-mask:linear-gradient(to left, transparent 25%, #000 100%);mask:linear-gradient(to left, transparent 25%, #000 100%)}
+.hero>*{position:relative}
+.serial{font-family:var(--mono);font-size:.78rem;letter-spacing:.12em;color:var(--brass);direction:ltr;text-align:right}
+.hero h1{font-size:clamp(2.4rem,6vw,4rem);margin:10px 0 6px;font-weight:700}
+.hero h1 em{font-style:normal;color:var(--brass)}
+.hero .lead{font-size:1.12rem;color:var(--ink-soft);max-width:34em;margin-top:14px}
+.hero .en{font-size:.85rem;margin-top:4px}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:999px;padding:9px 20px;cursor:pointer;text-decoration:none;font-weight:600;font-size:.95rem;line-height:1.4}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.sm{padding:6px 14px;font-size:.85rem}
+.btn:hover{filter:brightness(1.1)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+
+/* chapter */
+.ch-head{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:28px}
+.ch-head h2{font-size:clamp(1.9rem,4.4vw,2.7rem);margin-top:6px}
+.ch-head .part{font-size:.9rem;color:var(--ink-soft);margin-top:6px}
+.prose{display:grid;gap:18px}
+.prose h3{font-size:1.35rem;margin-top:22px}
+.prose p{max-width:66ch}
+.prose ul,.prose ol{margin:0;padding-inline-start:1.3em;display:grid;gap:6px}
+.big{font-family:var(--display);font-size:1.45rem;line-height:1.6;border-inline-start:4px solid var(--brass);padding-inline-start:18px;color:var(--ink)}
+
+.term{display:inline-grid;gap:0;border:1px dashed var(--brass);border-radius:8px;padding:8px 14px;background:var(--brass-soft);justify-self:start}
+.term .ar{font-weight:700;font-size:1rem}
+.term .en{font-size:.8rem}
+.terms{display:flex;flex-wrap:wrap;gap:10px}
+
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:560px){.grid2,.grid4{grid-template-columns:minmax(0,1fr)}}
+.box{border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;background:var(--card);min-width:0}
+.box h4{font-size:1.08rem;margin-bottom:4px}
+.box p{font-size:.95rem;color:var(--ink-soft)}
+.box .k{display:block;font-family:var(--mono);color:var(--brass);font-size:.8rem;direction:ltr;text-align:right}
+
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
+th,td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top;text-align:right}
+tr:last-child td{border-bottom:0}
+th{font-family:var(--display);font-weight:600;background:var(--paper-2);font-size:.92rem}
+td.en-cell{direction:ltr;text-align:left;font-family:var(--mono);font-size:.82rem;color:var(--ink-soft);white-space:nowrap}
+
+/* tool card: "certificate" */
+.tool{border:1.5px solid var(--ink);border-radius:14px;background:var(--card);padding:22px;position:relative;display:grid;gap:16px;margin-top:8px}
+.tool::before{content:"";position:absolute;inset:5px;border:1px solid var(--line);border-radius:10px;pointer-events:none}
+.tool>*{position:relative}
+.tool-tag{font-size:.8rem;font-weight:700;color:var(--brass);letter-spacing:.03em}
+.tool h3{font-size:1.3rem;margin:0}
+.field{display:grid;gap:4px;min-width:0}
+.field label{font-size:.88rem;font-weight:600}
+.field small{color:var(--ink-soft);font-size:.8rem;line-height:1.5}
+input[type=text],input[type=number],textarea,select{width:100%;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px;line-height:1.6}
+textarea{min-height:90px;resize:vertical}
+input[type=range]{width:100%;accent-color:var(--brass)}
+.slider-row{display:grid;grid-template-columns:minmax(0,1fr) 42px;gap:12px;align-items:center}
+.slider-row output{font-family:var(--mono);font-weight:600;text-align:center;background:var(--paper-2);border-radius:6px;padding:2px 0;font-variant-numeric:tabular-nums}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:5px 14px;cursor:pointer;font-size:.9rem;line-height:1.5}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.result{border-radius:10px;padding:14px 16px;background:var(--paper-2);display:grid;gap:6px}
+.result .v{font-family:var(--display);font-size:1.5rem}
+.meter{height:12px;border-radius:12px;background:linear-gradient(to left,var(--green),var(--brass) 55%,var(--red));position:relative;direction:ltr}
+.meter i{position:absolute;top:-5px;width:4px;height:22px;background:var(--ink);border-radius:2px;transition:left .3s}
+.meter-l{display:flex;justify-content:space-between;font-size:.75rem;color:var(--ink-soft)}
+.pill{display:inline-block;border-radius:999px;padding:1px 10px;font-size:.8rem;font-weight:700}
+.pill.ok{background:var(--green-soft);color:var(--green)}
+.pill.warn{background:var(--brass-soft);color:var(--brass)}
+.pill.bad{background:var(--red-soft);color:var(--red)}
+.example-flag{font-size:.82rem;color:var(--brass);background:var(--brass-soft);border-radius:8px;padding:6px 12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+
+/* fraction */
+.formula{display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:center;padding:22px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.formula .eq{font-family:var(--display);font-size:1.6rem;color:var(--brass)}
+.frac{display:grid;text-align:center;font-family:var(--display);font-size:1.15rem;min-width:0}
+.frac .bar{height:2px;background:var(--ink);margin:8px 0}
+.formula-en{direction:ltr;text-align:center;font-family:var(--mono);font-size:.8rem;color:var(--ink-soft);margin-top:-6px}
+
+/* stacks / bars */
+.rank{display:grid;gap:10px}
+.rank div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;align-items:center;font-size:.92rem}
+.rank span{height:26px;border-radius:6px;background:var(--green);color:var(--paper);font-size:.8rem;display:flex;align-items:center;padding:0 10px;font-weight:600}
+
+/* cycle */
+.cycle{position:relative;width:100%;max-width:440px;aspect-ratio:1;margin:8px auto}
+.cycle svg{position:absolute;inset:0;width:100%;height:100%}
+.cycle button{position:absolute;transform:translate(-50%,-50%);width:31%;border:1px solid var(--ink);background:var(--card);border-radius:10px;padding:6px 4px;font-size:.8rem;line-height:1.45;cursor:pointer;font-weight:600}
+.cycle button[aria-pressed="true"]{background:var(--brass);color:var(--paper);border-color:var(--brass)}
+.cycle .center{position:absolute;inset:32%;display:grid;place-items:center;text-align:center;font-family:var(--display);font-size:1rem;color:var(--ink-soft)}
+
+/* builder */
+.items{display:grid;gap:12px}
+.item{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--paper);display:grid;gap:10px}
+.item-h{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.item-h b{font-family:var(--mono);color:var(--brass)}
+.x{background:none;border:0;color:var(--red);cursor:pointer;font-size:.85rem}
+.f3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.f3{grid-template-columns:minmax(0,1fr)}}
+.matrix{width:100%;max-width:460px;margin:0 auto;display:block}
+.stack-list{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.stack-list li{display:flex;gap:10px;align-items:baseline;justify-content:space-between;border-bottom:1px dotted var(--line);padding-bottom:6px;font-size:.95rem}
+
+/* receipt */
+.receipt{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:16px 18px;font-variant-numeric:tabular-nums}
+.receipt .line{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed var(--line)}
+.receipt .tot{font-weight:700;border-bottom:0;padding-top:10px}
+.receipt .price{font-family:var(--display);font-size:1.4rem;color:var(--green)}
+.receipt s{color:var(--ink-soft)}
+
+/* quiz */
+.quiz{border-top:2px solid var(--ink);padding-top:16px;display:grid;gap:14px;margin-top:20px}
+.quiz>h3{font-size:1.2rem;margin:0}
+.q{display:grid;gap:8px}
+.q p{font-weight:600}
+.opts{display:grid;gap:6px}
+.opts button{text-align:right;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:9px 14px;cursor:pointer;line-height:1.6}
+.opts button:hover{border-color:var(--ink)}
+.opts button.right{background:var(--green-soft);border-color:var(--green);color:var(--ink)}
+.opts button.wrong{background:var(--red-soft);border-color:var(--red)}
+.fb{font-size:.92rem;color:var(--ink-soft);border-inline-start:3px solid var(--green);padding-inline-start:12px}
+
+/* apply + footer */
+.apply{background:var(--green-soft);border-radius:12px;padding:18px;display:grid;gap:10px;margin-top:20px}
+.apply h3{font-size:1.15rem;margin:0}
+.apply textarea{background:var(--card)}
+.ch-foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:18px;border-top:1px solid var(--line)}
+.done-btn[aria-pressed="true"]{background:var(--green);border-color:var(--green)}
+
+/* home map */
+.parts{display:grid;gap:14px;margin-top:26px}
+.part-card{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:16px 18px;display:grid;grid-template-columns:70px minmax(0,1fr);gap:14px}
+.part-card .pn{font-family:var(--display);font-size:2rem;color:var(--brass);line-height:1}
+.part-card h3{font-size:1.15rem}
+.part-card .links{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.part-card .links a{font-size:.88rem;border:1px solid var(--line);border-radius:999px;padding:3px 12px;text-decoration:none;color:var(--ink);background:var(--paper)}
+.part-card .links a.done{border-color:var(--green);color:var(--green)}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:22px}
+@media (max-width:640px){.how{grid-template-columns:minmax(0,1fr)}}
+.how div{border-top:3px solid var(--ink);padding-top:10px}
+.how b{font-family:var(--mono);color:var(--brass)}
+.note{font-size:.85rem;color:var(--ink-soft)}
+
+/* compare toggle */
+.cmp{display:grid;gap:12px}
+.cmp-card{border-radius:12px;padding:18px;border:1px solid var(--line);background:var(--paper)}
+.cmp-card.gs{border:2px solid var(--brass);background:var(--card)}
+.cmp-card ul{margin:8px 0 0;padding-inline-start:1.2em}
+.sort{display:grid;gap:8px}
+.sort-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:var(--paper)}
+.sort-item .chips{flex-wrap:nowrap}
+@media (max-width:560px){.sort-item{grid-template-columns:minmax(0,1fr)}}
+.sheet{white-space:pre-wrap;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;font-size:.98rem;line-height:1.9}
+/* listen player */
+.listen{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px}
+.listen select{width:auto;padding:4px 10px;font-size:.85rem}
+.listen .note{flex-basis:100%}
+.reading{background:var(--brass-soft);border-radius:6px;box-shadow:0 0 0 6px var(--brass-soft);transition:background .3s}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+</head>
+<body>
+<div class="app" dir="rtl" lang="ar">
+<header class="top"><div class="top-in">
+  <a class="brand" href="#home">عرض <b>لا يُرفض</b></a>
+  <div class="prog"><span class="prog-txt" id="progTxt">0 من 12 فصل</span><div class="prog-bar"><i id="progBar"></i></div></div>
+</div></header>
+
+<div class="shell">
+<nav class="rail" id="rail" aria-label="الفصول">
+  <a href="#home"><span class="n">00</span>البداية</a>
+  <h4>الجزء الأول · البداية</h4>
+  <a href="#ch1"><span class="n">01</span>العرض الذي لا يُرفض</a>
+  <h4>الجزء الثاني · التسعير</h4>
+  <a href="#ch2"><span class="n">02</span>فخ السلعة</a>
+  <a href="#ch3"><span class="n">03</span>السوق الجائع</a>
+  <a href="#ch4"><span class="n">04</span>اطلب ما تستحق</a>
+  <h4>الجزء الثالث · القيمة</h4>
+  <a href="#ch5"><span class="n">05</span>معادلة القيمة</a>
+  <a href="#ch6"><span class="n">06</span>من المشاكل إلى الحلول</a>
+  <a href="#ch7"><span class="n">07</span>التقليم والتكديس</a>
+  <h4>الجزء الرابع · تعزيز العرض</h4>
+  <a href="#ch8"><span class="n">08</span>الندرة والإلحاح</a>
+  <a href="#ch9"><span class="n">09</span>المكافآت</a>
+  <a href="#ch10"><span class="n">10</span>الضمانات</a>
+  <a href="#ch11"><span class="n">11</span>تسمية العرض</a>
+  <h4>الجزء الخامس · التنفيذ</h4>
+  <a href="#ch12"><span class="n">12</span>ورقة عرضك</a>
+</nav>
+
+<main>
+<!-- ================= HOME ================= -->
+<section data-view="home">
+  <div class="hero">
+    <div class="serial">No. 100M · OFFERS · 001</div>
+    <h1>عرض <em>لا يُرفض</em></h1>
+    <p>رفيقك التفاعلي لقراءة الكتاب</p>
+    <span class="en">$100M Offers — Alex Hormozi</span>
+    <p class="lead">الكتاب كله بيدور حول سؤال واحد: كيف تبني عرضًا قويًا لدرجة إن الزبون يحس إنه غبي لو رفضه؟ هون رح تلاقي كل فكرة مشروحة ببساطة، مع أداة تجربها بإيدك، وأسئلة سريعة تتأكد فيها إنك فهمت.</p>
+    <div class="row" style="margin-top:22px">
+      <a class="btn" href="#ch1" id="startBtn">ابدأ الفصل الأول</a>
+      <a class="btn ghost" href="#ch12">شوف ورقة عرضك</a>
+    </div>
+  </div>
+
+  <div class="how">
+    <div><b>1</b><h4>اقرأ من نسختك</h4><p class="note">اقرأ الجزء من النسخة المترجمة اللي معك. ترتيب الأجزاء هون نفس ترتيب الكتاب.</p></div>
+    <div><b>2</b><h4>افتح الفصل هون</h4><p class="note">الفكرة بكلمات بسيطة، وأداة تطبّق فيها على مشروعك فورًا.</p></div>
+    <div><b>3</b><h4>جاوب وطبّق</h4><p class="note">سؤالين للتثبيت، وسطر تكتبه لمشروعك. كله بيتجمع بالآخر بورقة عرض وحدة.</p></div>
+  </div>
+
+  <div class="parts" id="partsMap">
+    <div class="part-card"><div class="pn">١</div><div><h3>من أين بدأنا</h3><p class="note">قصة الكاتب وتعريف العرض الذي لا يُرفض.</p><div class="links"><a href="#ch1" data-ch="ch1">العرض الذي لا يُرفض</a></div></div></div>
+    <div class="part-card"><div class="pn">٢</div><div><h3>التسعير</h3><p class="note">ليش المنافسة على السعر خسارة، وكيف تختار سوقًا يدفع.</p><div class="links"><a href="#ch2" data-ch="ch2">فخ السلعة</a><a href="#ch3" data-ch="ch3">السوق الجائع</a><a href="#ch4" data-ch="ch4">اطلب ما تستحق</a></div></div></div>
+    <div class="part-card"><div class="pn">٣</div><div><h3>القيمة</h3><p class="note">قلب الكتاب: معادلة القيمة وطريقة بناء العرض خطوة بخطوة.</p><div class="links"><a href="#ch5" data-ch="ch5">معادلة القيمة</a><a href="#ch6" data-ch="ch6">من المشاكل إلى الحلول</a><a href="#ch7" data-ch="ch7">التقليم والتكديس</a></div></div></div>
+    <div class="part-card"><div class="pn">٤</div><div><h3>تعزيز العرض</h3><p class="note">خمس أدوات ترفع الطلب على نفس العرض بدون ما تغيّر المنتج.</p><div class="links"><a href="#ch8" data-ch="ch8">الندرة والإلحاح</a><a href="#ch9" data-ch="ch9">المكافآت</a><a href="#ch10" data-ch="ch10">الضمانات</a><a href="#ch11" data-ch="ch11">تسمية العرض</a></div></div></div>
+    <div class="part-card"><div class="pn">٥</div><div><h3>التنفيذ</h3><p class="note">كل اللي كتبته بالأدوات بيتجمع هون بورقة عرض جاهزة.</p><div class="links"><a href="#ch12" data-ch="ch12">ورقة عرضك</a></div></div></div>
+  </div>
+  <p class="note" style="margin-top:18px">ملاحظة: أرقام الفصول هون للتنقل داخل الموقع، وممكن ما تطابق ترقيم فصول النسخة المترجمة. الأجزاء الخمسة نفسها. كل اللي بتكتبه محفوظ على متصفحك فقط.</p>
+</section>
+
+<!-- ================= CH1 ================= -->
+<section data-view="ch1" hidden>
+  <div class="ch-head"><div class="serial">CHAPTER 01 / 12</div><h2>العرض الذي لا يُرفض</h2><p class="part">الجزء الأول · من أين بدأنا</p></div>
+  <div class="prose">
+    <p class="big">عرض قوي لدرجة إن الزبون يحس إنه غبي لو قال لا.</p>
+    <div class="terms"><div class="term"><span class="ar">العرض الذي لا يُرفض</span><span class="en">Grand Slam Offer</span></div></div>
+    <p>هرموزي بلّش بيزنس صالات رياضية وكان على حافة الإفلاس. المنتج ما كان سيئ، والتسويق ما كان سيئ. المشكلة كانت إن العرض نفسه شبه عروض كل الصالات الثانية، فالناس كانت تقارن بالسعر وبس.</p>
+    <p>لما غيّر طريقة تقديم نفس الخدمة، تغيّر كل شي: صار يبيع أكثر، بسعر أعلى، لزبائن ملتزمين أكثر.</p>
+    <h3>العرض أكبر من المنتج</h3>
+    <p>العرض هو كل اللي الزبون بياخذه مقابل فلوسه، مع الشروط اللي حواليه:</p>
+    <div class="grid2">
+      <div class="box"><h4>شو بياخذ</h4><p>المنتج الأساسي، الإضافات، طريقة التوصيل، مستوى الدعم.</p></div>
+      <div class="box"><h4>بأي شروط</h4><p>السعر، الضمان، المدة، عدد المقاعد، الاسم اللي بيعرّف العرض.</p></div>
+    </div>
+    <p>نفس المنتج ممكن يصير عرض ضعيف أو عرض لا يُرفض، حسب كيف تركّب هالعناصر.</p>
+
+    <div class="tool">
+      <span class="tool-tag">جرّب بإيدك</span>
+      <h3>نفس الدورة، عرضين مختلفين</h3>
+      <div class="chips" role="group" aria-label="اختر العرض">
+        <button class="chip" aria-pressed="true" data-cmp="a">العرض العادي</button>
+        <button class="chip" aria-pressed="false" data-cmp="b">العرض الذي لا يُرفض</button>
+      </div>
+      <div class="cmp">
+        <div class="cmp-card" id="cmpA">
+          <h4>دورة مراجعة الباطنية</h4>
+          <ul><li>20 محاضرة مسجلة</li><li>السعر: 40 دينار</li></ul>
+          <p class="note" style="margin-top:8px">الطالب رح يسأل: ليش مش الدورة الثانية بـ 30؟</p>
+        </div>
+        <div class="cmp-card gs" id="cmpB" hidden>
+          <h4>تحدي الـ30 يوم لاجتياز امتحان الباطنية</h4>
+          <ul>
+            <li>20 محاضرة مرتبة حسب أعلى الأسئلة تكرارًا</li>
+            <li>بنك أسئلة مع شرح لكل جواب</li>
+            <li>خطة دراسة يومية جاهزة</li>
+            <li>جلسة أسئلة مباشرة كل أسبوع</li>
+            <li>ضمان: إذا حليت كل الأسئلة وما نجحت، بتحضر الدفعة الجاية مجانًا</li>
+            <li>25 مقعد فقط لهالدفعة</li>
+            <li>السعر: 90 دينار</li>
+          </ul>
+          <p class="note" style="margin-top:8px">ما في شي يقارنه فيه. السؤال صار: هل بدي أنجح؟</p>
+        </div>
+      </div>
+      <p class="note">لاحظ: المحاضرات نفسها. اللي تغيّر هو التركيب حواليها، وهذا بالضبط موضوع الكتاب.</p>
+    </div>
+
+    <div class="quiz">
+      <h3>تأكّد إنك فهمت</h3>
+      <div class="q" data-explain="العرض الذي لا يُرفض بيعتمد على قيمة متصورة أعلى بكثير من السعر، مش على إنه أرخص.">
+        <p>شو اللي بيخلّي العرض «لا يُرفض»؟</p>
+        <div class="opts"><button>إنه أرخص سعر بالسوق</button><button data-ok>إن قيمته بعين الزبون أعلى بكثير من سعره</button><button>إن إعلانه منتشر بكل مكان</button></div>
+        <p class="fb" hidden></p>
+      </div>
+      <div class="q" data-explain="العرض يشمل المنتج والسعر والضمان والمكافآت والمدة والاسم. تحسين أي واحد منهم بيغيّر العرض.">
+        <p>أي جملة صحيحة عن «العرض»؟</p>
+        <div class="opts"><button>العرض هو المنتج نفسه وبس</button><button>العرض هو الإعلان</button><button data-ok>العرض هو المنتج مع كل الشروط والإضافات حواليه</button></div>
+        <p class="fb" hidden></p>
+      </div>
+    </div>
+    <div class="apply"><h3>طبّقها على مشروعك</h3><p class="note">اكتب منتجك أو خدمتك كما تبيعها اليوم، بسطر أو سطرين، مع السعر.</p><textarea class="note-in" id="note-ch1" placeholder="مثال: دورة مسجلة لمادة الباطنية، 40 دينار"></textarea></div>
+  </div>
+</section>
+
+<!-- ================= CH2 ================= -->
+<section data-view="ch2" hidden>
+  <div class="ch-head"><div class="serial">CHAPTER 02 / 12</div><h2>فخ السلعة</h2><p class="part">الجزء الثاني · التسعير</p></div>
+  <div class="prose">
+    <p class="big">إذا الزبون قادر يقارنك بغيرك سطر بسطر، رح يختار الأرخص.</p>
+    <div class="terms">
+      <div class="term"><span class="ar">السلعة</span><span class="en">Commodity</span></div>
+      <div class="term"><span class="ar">فئة من عنصر واحد</span><span class="en">Category of One</span></div>
+    </div>
+    <p>لما يكون عرضك شبه عروض المنافسين، بيصير «سلعة». السلعة الوحيدة اللي بتفرق عن غيرها هي السعر، فالسوق كله بينزل للأرخص، والربح بيقل لحد ما ما يضل عندك فلوس تحسّن فيها الخدمة.</p>
+    <p>الحل مش إنك تصير أرخص. الحل إنك تبني عرضًا ما في شي بيشبهه، فيصير الزبون يقارن بين عرضك وبين إنه ما يشتري أبدًا. هون بيقرر على أساس القيمة، مش السعر.</p>
+    <div class="grid2">
+      <div class="box"><h4>عرض سلعة</h4><p>نفس المكونات اللي عند الكل، بيتقارن بالسعر، ربح قليل، زبائن بيدوروا على خصم.</p></div>
+      <div class="box"><h4>فئة من عنصر واحد</h4><p>تركيبة خاصة فيك، صعب مقارنتها، بتقدر تسعّر على القيمة، زبائن ملتزمين أكثر.</p></div>
+    </div>
+
+    <div class="tool">
+      <span class="tool-tag">جرّب بإيدك</span>
+      <h3>صنّف هالعروض</h3>
+      <p class="note">لكل عرض: هل الزبون بيقدر يقارنه بسهولة مع منافس؟</p>
+      <div class="sort" id="sortBox"></div>
+      <div class="result" id="sortRes"><span class="note">صنّف العروض الأربعة لتشوف النتيجة.</span></div>
+    </div>
+
+    <div class="quiz">
+      <h3>تأكّد إنك فهمت</h3>
+      <div class="q" data-explain="لما العروض متشابهة، السعر بيصير المعيار الوحيد للمقارنة، وهذا بيضغط على الربح.">
+        <p>شو أكبر مشكلة بإن عرضك يكون «سلعة»؟</p>
+        <div class="opts"><button>إنه صعب تعلن عنه</button><button data-ok>إن الزبون بيقارنك بالسعر فقط</button><button>إنه بيحتاج فريق كبير</button></div>
+        <p class="fb" hidden></p>
+      </div>
+      <div class="q" data-explain="الفكرة إنك تخرج من المقارنة كليًا، مش إنك تربح سباق الخصومات.">
+        <p>حسب الكتاب، كيف تهرب من فخ السلعة؟</p>
+        <div class="opts"><button>تنزّل سعرك أقل من الكل</button><button>تزيد عدد الإعلانات</button><button data-ok>تبني عرضًا مختلفًا لدرجة إنه ما بينقارن</button></div>
+        <p class="fb" hidden></p>
+      </div>
+    </div>
+    <div class="apply"><h3>طبّقها على مشروعك</h3><p class="note">مين أقرب 3 منافسين إلك؟ وشو الشي الوحيد اللي بيقدر الزبون يقارنك فيه معهم اليوم؟</p><textarea class="note-in" id="note-ch2"></textarea></div>
+  </div>
+</section>
+
+<!-- ================= CH3 ================= -->
+<section data-view="ch3" hidden>
+  <div class="ch-head"><div class="serial">CHAPTER 03 / 12</div><h2>السوق الجائع</h2><p class="part">الجزء الثاني · التسعير</p></div>
+  <div class="prose">
+    <p class="big">أحسن عرض بالعالم ما بيبيع لناس مش جوعانين.</p>
+    <div class="terms"><div class="term"><span class="ar">السوق الجائع</span><span class="en">Starving Crowd</span></div></div>
+    <p>قبل ما تفكر بالعرض، اختار السوق صح. حسب الكتاب، ترتيب الأهمية كالتالي:</p>
+    <div class="rank" aria-label="ترتيب الأهمية">
+      <div><b>1. السوق</b><span style="width:100%">الأهم</span></div>
+      <div><b>2. قوة العرض</b><span style="width:68%">مهم</span></div>
+      <div><b>3. مهارة الإقناع</b><span style="width:38%">أقل</span></div>
+    </div>
+    <p>بائع متوسط بعرض قوي بسوق جائع، بيتفوق على بائع ممتاز بسوق ما بدّه الشي.</p>
+    <h3>أربع علامات للسوق الجائع</h3>
+    <div class="grid4">
+      <div class="box"><h4>ألم كبير</h4><p>المشكلة موجعة لدرجة إنهم بدهم حل، مش «حلو لو».</p></div>
+      <div class="box"><h4>قدرة على الدفع</h4><p>معهم فلوس، أو بيقدروا يدبروها لهالمشكلة بالذات.</p></div>
+      <div class="box"><h4>سهل الوصول إلهم</h4><p>في مكان بيتجمعوا فيه: جامعة، مجموعة، صفحة، نقابة.</p></div>
+      <div class="box"><h4>سوق بيكبر</h4><p>عددهم بيزيد مع الوقت، مش سوق بيتقلص.</p></div>
+    </div>
+    <h3>ثلاث أسواق أساسية، ثم تخصص</h3>
+    <p>كل الأسواق الكبيرة ترجع لثلاث رغبات: الصحة، الثروة، العلاقات. بس الربح الحقيقي بالتخصص داخلها. كل ما ضيّقت أكثر، صار عرضك بيحكي مع شخص محدد، وصار بإمكانك تطلب سعر أعلى.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>المستوى</th><th>مثال</th></tr></thead>
+      <tbody>
+        <tr><td>السوق الأم</td><td>الثروة: تطوير المسار المهني</td></tr>
+        <tr><td>تخصص</td><td>طلاب الطب</td></tr>
+        <tr><td>تخصص أدق</td><td>طلاب سنة رابعة طب</td></tr>
+        <tr><td>التخصص اللي بيبيع</td><td>طلاب سنة رابعة بيحضروا لامتحان الباطنية النهائي</td></tr>
+      </tbody>
+    </table></div>
+    <p>وبعد ما تختار، التزم. التنقل بين الأسواق كل شهرين بيخليك تبدأ من الصفر كل مرة.</p>
+
+    <div class="tool">
+      <span class="tool-tag">أداة</span>
+      <h3>فحص السوق الجائع</h3>
+      <div class="field"><label for="mkName">السوق اللي بتفكر فيه</label><input type="text" id="mkName"></div>
+      <div class="field"><label for="mk-pain">قديش الألم كبير؟</label><div class="slider-row"><input type="range" id="mk-pain" min="0" max="10"><output></output></div></div>
+      <div class="field"><label for="mk-power">قدرتهم على الدفع</label><div class="slider-row"><input type="range" id="mk-power" min="0" max="10"><output></output></div></div>
+      <div class="field"><label for="mk-target">سهولة الوصول إلهم</label><div class="slider-row"><input type="range" id="mk-target" min="0" max="10"><output></output></div></div>
+      <div class="field"><label for="mk-grow">هل السوق بيكبر؟</label><div class="slider-row"><input type="range" id="mk-grow" min="0" max="10"><output></output></div></div>
+      <div class="result" id="mkRes"></div>
+    </div>
+
+    <div class="quiz">
+      <h3>تأكّد إنك فهمت</h3>
+      <div class="q" data-explain="السوق أولًا، ثم العرض، ثم الإقناع.">
+        <p>شو الترتيب الصحيح حسب الأهمية؟</p>
+        <div class="opts"><button>الإقناع، ثم العرض، ثم السوق</button><button data-ok>السوق، ثم العرض، ثم الإقناع</button><button>العرض، ثم السوق، ثم الإقناع</button></div>
+        <p class="fb" hidden></p>
+      </div>
+      <div class="q" data-explain="قلة المنافسين مش من العلامات الأربع. وجود منافسين غالبًا دليل إن في طلب.">
+        <p>أي واحد من هدول <u>مش</u> من علامات السوق الجائع؟</p>
+        <div class="opts"><button>ألم كبير</button><button>قدرة على الدفع</button><button data-ok>قلة المنافسين</button><button>سوق بيكبر</button></div>
+        <p class="fb" hidden></p>
+      </div>
+    </div>
+    <div class="apply"><h3>طبّقها على مشروعك</h3><p class="note">اكتب سوقك بأدق صيغة ممكنة: مين بالضبط؟ وبأي مرحلة؟</p><textarea class="note-in" id="note-ch3"></textarea></div>
+  </div>
+</section>
+
+<!-- ================= CH4 ================= -->
+<section data-view="ch4" hidden>
+  <div class="ch-head"><div class="serial">CHAPTER 04 / 12</div><h2>اطلب ما تستحق</h2><p class="part">الجزء الثاني · التسعير</p></div>
+  <div class="prose">
+    <p class="big">ما في ميزة استراتيجية بإنك تكون ثاني أرخص واحد بالسوق.</p>
+    <p>أغلب أصحاب المشاريع بيسعّروا من الخوف. بس السعر المنخفض بيبدأ دائرة سلبية: ربح قليل، خدمة أضعف، زبائن أقل التزامًا، نتائج أسوأ، وسمعة بتضغط على السعر أكثر.</p>
+    <p>السعر العالي، مع عرض بيستاهله، بيبدأ الدائرة العكسية. اضغط على كل خطوة لتشوف كيف بتغذي اللي بعدها:</p>
+    <div class="terms"><div class="term"><span class="ar">الدائرة الإيجابية للسعر</span><span class="en">Virtuous Cycle of Price</span></div></div>
+
+    <div class="tool">
+      <span class="tool-tag">تفاعلي</span>
+      <h3>الدائرة الإيجابية للسعر</h3>
+      <div class="cycle" id="cycle">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><defs><marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--brass)"/></marker></defs>
+          <circle cx="50" cy="50" r="38" fill="none" stroke="var(--line)" stroke-width="1.2" stroke-dasharray="2 2"/>
+          <path d="M 88 50 A 38 38 0 0 1 69 83" fill="none" stroke="var(--brass)" stroke-width="1.2" marker-end="url(#ah)"/>
+        </svg>
+        <div class="center">سعر أعلى<br>نتيجة أفضل</div>
+      </div>
+      <div class="result" id="cycleTxt"></div>
+    </div>
+
+    <h3>ليش الزبون اللي بيدفع أكثر بينجح أكثر؟</h3>
+    <p>لما الشخص يدفع مبلغ يحسّه، بيلتزم. بيحضر، بيطبّق، وبياخذ الموضوع بجدية. السعر نفسه جزء من النتيجة. وكمان السعر بيرسل رسالة عن القيمة قبل ما الزبون يجرب أي شي.</p>
+
+    <div class="tool">
+      <span class="tool-tag">أداة</span>
+      <h3>حاسبة رفع السعر</h3>
+      <p class="note">الخوف الأكبر: «إذا رفعت السعر رح أخسر زبائن». شوف قديش ممكن تخسر وتضل رابح أكثر.</p>
+      <div class="f3">
+        <div class="field"><label for="pr-p">السعر الحالي (دينار)</label><input type="number" id="pr-p" min="0"></div>
+        <div class="field"><label for="pr-c">تكلفة خدمة الزبون الواحد</label><input type="number" id="pr-c" min="0"></div>
+        <div class="field"><label for="pr-n">عدد الزبائن الشهري</label><input type="number" id="pr-n" min="0"></div>
+        <div class="field"><label for="pr-p2">السعر الجديد</label><input type="number" id="pr-p2" min="0"></div>
+        <div class="field"><label for="pr-l">نسبة الزبائن اللي ممكن تخسرهم %</label><input type="number" id="pr-l" min="0" max="100"></div>
+      </div>
+      <div class="result" id="prRes"></div>
+    </div>
+
+    <div class="quiz">
+      <h3>تأكّد إنك فهمت</h3>
+      <div class="q" data-explain="الربح الإضافي بيسمح لك تصرف أكثر على الخدمة، والزبون اللي دفع أكثر بيلتزم أكثر، فالنتائج بتتحسن.">
+        <p>كيف السعر الأعلى ممكن يحسّن نتائج الزبون نفسه؟</p>
+        <div class="opts"><button>ما بيحسّنها، بس بيزيد الربح</button><button data-ok>بيعطيك موارد لخدمة أفضل، وبيخلّي الزبون أكثر التزامًا</button><button>لأنه الزبائن بيحبوا الأشياء الغالية</button></div>
+        <p class="fb" hidden></p>
+      </div>
+      <div class="q" data-explain="إذا السعر تضاعف والتكلفة ثابتة، بتقدر تخسر جزء كبير من الزبائن وتضل رابح أكثر. جرّبها بالحاسبة.">
+        <p>بعد ما ترفع السعر، إذا خسرت بعض الزبائن، هل خسرت؟</p>
+        <div class="opts"><button>أكيد، أي زبون بيروح خسارة</button><button data-ok>مش بالضرورة، الربح الكلي ممكن يزيد رغم قلة الزبائن</button></div>
+        <p class="fb" hidden></p>
+      </div>
+    </div>
+    <div class="apply"><h3>طبّقها على مشروعك</h3><p class="note">شو السعر اللي بتخاف تطلبه؟ وشو لازم يكون بالعرض لحتى يستاهله بوضوح؟</p><textarea class="note-in" id="note-ch4"></textarea></div>
+  </div>
+</section>
+
+<!-- ================= CH5 ================= -->
+<section data-view="ch5" hidden>
+  <div class="ch-head"><div class="serial">CHAPTER 05 / 12</div><h2>معادلة القيمة</h2><p class="part">الجزء الثالث · القيمة</p></div>
+  <div class="prose">
+    <p class="big">القيمة مش رقم ثابت. هي أربع أشياء بعين الزبون، وبتقدر تتحكم بكل وحدة منها.</p>
+    <div class="formula">
+      <div class="frac"><div>النتيجة الحلم × احتمال النجاح المتصوَّر</div><div class="bar"></div><div>مدة الانتظار × الجهد والتضحية</div></div>
+      <div class="eq">= القيمة</div>
+    </div>
+    <p class="formula-en">Value = (Dream Outcome × Perceived Likelihood) ÷ (Time Delay × Effort &amp; Sacrifice)</p>
+
+    <div class="tbl"><table>
+      <thead><tr><th>العنصر</th><th>بالإنجليزي</th><th>المطلوب</th><th>كيف</th></tr></thead>
+      <tbody>
+        <tr><td>النتيجة الحلم</td><td class="en-cell">Dream Outcome</td><td>ارفعها</td><td>اربطها بالمكانة: كيف رح يشوفه الناس بعدها؟</td></tr>
+        <tr><td>احتمال النجاح</td><td class="en-cell">Perceived Likelihood</td><td>ارفعه</td><td>نتائج سابقة، شهادات، ضمان، طريقة واضحة.</td></tr>
+        <tr><td>مدة الانتظار</td><td class="en-cell">Time Delay</td><td>قصّرها</td><td>مكسب سريع بأول أيام، حتى لو صغير.</td></tr>
+        <tr><td>الجهد والتضحية</td><td class="en-cell">Effort &amp; Sacrifice</td><td>قلّلها</td><td>اعمله عنه أو معه، بدل ما يعمله لحاله.</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>كلمة «المتصوَّر» مهمة:</b> مش مهم الاحتمال الحقيقي بس، مهم شو الزبون مقتنع فيه.</p>
+    <p><b>السحر بالمقام:</b> أغلب الناس بيركزوا على تكبير الوعد. الكتاب بيقول إن أقوى العروض هي اللي بتقرّب الوقت والجهد من الصفر. لاحظ بالأداة كيف تقليل المقام بيرفع القيمة بسرعة.</p>
+
+    <div class="tool">
+      <span class="tool-tag">أداة</span>
+      <h3>حاسبة القيمة</h3>
+      <div class="chips"><button class="chip" data-preset="weak">مثال: عرض سلعة</button><button class="chip" data-preset="gs">مثال: عرض لا يُرفض</button></div>
+      <div class="grid2">
+        <div class="field"><label for="v-d">النتيجة الحلم</label><small>قديش النتيجة مغرية؟</small><div class="slider-row"><input type="range" id="v-d" min="1" max="10"><output></output></div></div>
+        <div class="field"><label for="v-l">احتمال النجاح المتصوَّر</label><small>قديش مقتنع إنها رح تزبط معه؟</small><div class="slider-row"><input type="range" id="v-l" min="1" max="10"><output></output></div></div>
+        <div class="field"><label for="v-t">مدة الانتظار</label><small>1 = فورًا، 10 = سنين</small><div class="slider-row"><input type="range" id="v-t" min="1" max="10"><output></output></div></div>
+        <div class="field"><label for="v-e">الجهد والتضحية</label><small>1 = بدون جهد، 10 = مرهق جدًا</small><div class="slider-row"><input type="range" id="v-e" min="1" max="10"><output></output></div></div>
+      </div>
+      <div class="result">
+        <div class="row" style="justify-content:space-between"><span>مؤشر القيمة</span><span class="v" id="vScore"></span></div>
+        <div class="meter"><i id="vMark"></i></div>
+        <div class="meter-l"><span>ضعيف</span><span>لا يُرفض</span></div>
+        <p id="vTip"></p>
+      </div>
+    </div>
+
+    <div class="quiz">
+      <h3>تأكّد إنك فهمت</h3>
+      <div class="q" data-explain="تقليل الوقت والجهد (المقام) غالبًا أقوى طريقة لرفع القيمة.">
+        <p>حسب الكتاب، وين أقوى رافعة غالبًا؟</p>
+        <div class="opts"><button>تكبير الوعد أكثر وأكثر</button><button data-ok>تقليل مدة الانتظار والجهد</button><button>تخفيض السعر</button></div>
+        <p class="fb" hidden></p>
+      </div>
+      <div class="q" data-explain="خدمة «نعملها عنك» بتقلل الجهد على الزبون، وهذا جزء من المقام.">
+        <p>لما تحوّل خدمتك من «اعملها لحالك» إلى «نعملها عنك»، أي عنصر عم تحسّن؟</p>
+        <div class="opts"><button>النتيجة الحلم</button><button>احتمال النجاح</button><button data-ok>الجهد والتضحية</button></div>
+        <p class="fb" hidden></p>
+      </div>
+    </div>
+    <div class="apply"><h3>طبّقها على مشروعك</h3><p class="note">قيّم عرضك الحالي بالأداة. أي عنصر هو الأضعف؟ وشو خطوة وحدة بتحسنه؟</p><textarea class="note-in" id="note-ch5"></textarea></div>
+  </div>
+</section>
+
+<!-- ================= CH6 ================= -->
+<section data-view="ch6" hidden>
+  <div class="ch-head"><div class="serial">CHAPTER 06 / 12</div><h2>من المشاكل إلى الحلول</h2><p class="part">الجزء الثالث · القيمة</p></div>
+  <div class="prose">
+    <p class="big">كل عقبة بتوقف بين الزبون وحلمه، هي فرصة تضيف قيمة لعرضك.</p>
+    <p>هون بتبدأ طريقة بناء العرض العملية. أول أربع خطوات:</p>
+    <div class="grid4">
+      <div class="box"><span class="k">STEP 1</span><h4>حدد النتيجة الحلم</h4><p>شو الزبون بدّه بالضبط؟ بكلماته هو، مش بكلماتك.</p></div>
+      <div class="box"><span class="k">STEP 2</span><h4>اكتب كل المشاكل</h4><p>كل عقبة قبل الشراء، وأثناء الاستخدام، وبعده. اكتب كثير.</p></div>
+      <div class="box"><span class="k">STEP 3</span><h4>حوّلها لحلول</h4><p>كل مشكلة صيغها كـ «كيف ...». هذا بيصير اسم الحل.</p></div>
+      <div class="box"><span class="k">STEP 4</span><h4>اختار طريقة التوصيل</h4><p>كيف رح توصل كل حل؟ هون في خيارات كثيرة.</p></div>
+    </div>
+    <h3>كل مشكلة هي شك من أربعة</h3>
+    <p>كل عقبة بيحكيها الزبون بترجع لواحد من عناصر معادلة القيمة:</p>
+    <div class="tbl"><table>
+      <thead><tr><th>العنصر</th><th>الشك بعقل الزبون</th></tr></thead>
+      <tbody>
+        <tr><td>النتيجة الحلم</td><td>«ما بتستاهل»</td></tr>
+        <tr><td>احتمال النجاح</td><td>«ما رح تزبط معي أنا»</td></tr>
+        <tr><td>مدة الانتظار</td><td>«بدها وقت طويل»</td></tr>
+        <tr><td>الجهد والتضحية</td><td>«صعبة علي كثير»</td></tr>
+      </tbody>
+    </table></div>
+    <h3>طرق التوصيل</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>البُعد</th><th>الخيارات</th></tr></thead>
+      <tbody>
+        <tr><td>مستوى الاهتمام الشخصي</td><td>فردي، مجموعة صغيرة، واحد لكثير</td></tr>
+        <tr><td>جهد الزبون</td><td>اعملها لحالك، نعملها معك، نعملها عنك</td></tr>
+        <tr><td>وسيلة الدعم</td><td>حضوري، مكالمة، رسائل، مجموعة</td></tr>
+        <tr><td>شكل المحتوى</td><td>فيديو، صوت، مكتوب، مباشر</td></tr>
+        <tr><td>السرعة والتوفر</td><td>رد خلال ساعة، دوام رسمي، على مدار الساعة</td></tr>
+      </tbody>
+    </table></div>
+    <div class="grid2">
+      <div class="box"><h4>اختبار العشرة أضعاف</h4><p>لو الزبون دفع 10 أضعاف السعر، شو كنت رح تقدمله؟ هالسؤال بيفتح أفكار للقيمة.</p></div>
+      <div class="box"><h4>اختبار العُشر</h4><p>كيف بتوصل نفس النتيجة بعُشر التكلفة؟ هالسؤال بيحمي ربحك.</p></div>
+    </div>
+
+    <div class="tool" id="builderTool">
+      <span class="tool-tag">أداة · بناء العرض</span>
+      <h3>من المشاكل إلى الحلول</h3>
+      <div class="example-flag" id="exFlag"><span>هذا مثال جاهز لدورة طب. بدّله بمشروعك.</span><button class="btn sm ghost" id="clearEx">ابدأ من الصفر</button></div>
+      <div class="field"><label for="dream">النتيجة الحلم لزبونك</label><input type="text" id="dream"></div>
+      <div class="items" id="items"></div>
+      <div class="row"><button class="btn sm" id="addItem">أضف مشكلة</button><span class="note">التقييمات تستخدم بالفصل الجاي.</span></div>
+    </div>
+
+    <div class="quiz">
+      <h3>تأكّد إنك فهمت</h3>
+      <div class="q" data-explain="«ما رح تزبط معي» شك بالاحتمال، فالحل بيرفع ثقته: نتائج طلاب مثله، ضمان، طريقة واضحة.">
+        <p>طالب بيقول: «جربت دورات قبل وما استفدت». أي عنصر بيمسّه هالشك؟</p>
+        <div class="opts"><button>الجهد</button><button data-ok>احتمال النجاح</button><button>مدة الانتظار</button></div>
+        <p class="fb" hidden></p>
+      </div>
+      <div class="q" data-explain="المشكلة بتتحول لحل بصيغة «كيف ...»، وبعدها بتختار طريقة توصيله.">
+        <p>شو الخطوة اللي بتيجي مباشرة بعد ما تكتب قائمة المشاكل؟</p>
+        <div class="opts"><button>تحدد السعر</button><button data-ok>تحوّل كل مشكلة لحل بصيغة «كيف ...»</button><button>تكتب الإعلان</button></div>
+        <p class="fb" hidden></p>
+      </div>
+    </div>
+    <div class="apply"><h3>طبّقها على مشروعك</h3><p class="note">طبّق اختبار العشرة أضعاف: لو زبونك دفع عشر أضعاف، شو كنت رح تضيف؟</p><textarea class="note-in" id="note-ch6"></textarea></div>
+  </div>
+</section>
+
+<!-- ================= CH7 ================= -->
+<section data-view="ch7" hidden>
+  <div class="ch-head"><div class="serial">CHAPTER 07 / 12</div><h2>التقليم والتكديس</h2><p class="part">الجزء الثالث · القيمة</p></div>
+  <div class="prose">
+    <p class="big">صار عندك قائمة طويلة من الحلول. الآن احذف المكلف قليل القيمة، وكدّس الرخيص عالي القيمة.</p>
+    <div class="terms"><div class="term"><span class="ar">التقليم والتكديس</span><span class="en">Trim &amp; Stack</span></div></div>
+    <p>الخطوة الخامسة: قيّم كل حل على محورين، قديش بيكلفك تقدمه، وقديش قيمته بعين الزبون. بعدها:</p>
+    <div class="grid2">
+      <div class="box"><h4>تكلفة قليلة، قيمة عالية</h4><p>قلب العرض. هدول أرباحك الحقيقية.</p></div>
+      <div class="box"><h4>تكلفة عالية، قيمة عالية</h4><p>احتفظ فيها بحذر، أو حطها بنسخة أغلى من العرض.</p></div>
+      <div class="box"><h4>تكلفة قليلة، قيمة قليلة</h4><p>ممكن تصير مكافأة صغيرة، أو احذفها.</p></div>
+      <div class="box"><h4>تكلفة عالية، قيمة قليلة</h4><p>احذفها. بتاكل ربحك بدون ما يحس فيها الزبون.</p></div>
+    </div>
+    <p>اللي بيضل، بتكدّسه فوق بعض بعرض واحد. هيك بيطلع عرض قيمته الإجمالية أكبر بكثير من سعره.</p>
+
+    <div class="tool">
+      <span class="tool-tag">أداة · بناء العرض</span>
+      <h3>مصفوفة التقليم</h3>
+      <p class="note">النقاط من الحلول اللي كتبتها بالفصل السابق. عدّل التقييمات هناك وبتتحدث هون.</p>
+      <svg class="matrix" id="matrix" viewBox="0 0 340 340" role="img" aria-label="مصفوفة التكلفة والقيمة"></svg>
+      <h4>العرض بعد التقليم</h4>
+      <ul class="stack-list" id="stackList"></ul>
+      <div class="row"><a class="btn sm ghost" href="#ch6">عدّل الحلول</a></div>
+    </div>
+
+    <div class="quiz">
+      <h3>تأكّد إنك فهمت</h3>
+      <div class="q" data-explain="المكلف قليل القيمة أول شي بينحذف لأنه بياكل الربح بدون ما يرفع القيمة.">
+        <p>أي حلول لازم تحذفها أولًا؟</p>
+        <div class="opts"><button>رخيصة وقيمتها عالية</button><button data-ok>مكلفة وقيمتها قليلة</button><button>كل الحلول المكلفة</button></div>
+        <p class="fb" hidden></p>
+      </div>
+      <div class="q" data-explain="التكديس يعني تجمع الحلول المتبقية بعرض واحد قيمته الإجمالية أكبر بكثير من السعر.">
+        <p>شو المقصود بـ «التكديس»؟</p>
+        <div class="opts"><button data-ok>تجميع الحلول المتبقية بعرض واحد قيمته أكبر من سعره</button><button>رفع السعر تدريجيًا</button><button>بيع كل حل لحاله</button></div>
+        <p class="fb" hidden></p>
+      </div>
+    </div>
+    <div class="apply"><h3>طبّقها على مشروعك</h3><p class="note">شو الشي اللي بتقدمه اليوم وبيكلفك كثير والزبون ما بيقدّره؟</p><textarea class="note-in" id="note-ch7"></textarea></div>
+  </div>
+</section>
+
+<!-- ================= CH8 ================= -->
+<section data-view="ch8" hidden>
+  <div class="ch-head"><div class="serial">CHAPTER 08 / 12</div><h2>الندرة والإلحاح</h2><p class="part">الجزء الرابع · تعزيز العرض</p></div>
+  <div class="prose">
+    <p class="big">الناس بدها الشي أكثر لما يكون محدود، وبتتحرك أسرع لما يكون في موعد.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>المفهوم</th><th>بالإنجليزي</th><th>معناه</th></tr></thead>
+      <tbody>
+        <tr><td>الندرة</td><td class="en-cell">Scarcity</td><td>الكمية محدودة: مقاعد، أماكن، نسخ.</td></tr>
+        <tr><td>الإلحاح</td><td class="en-cell">Urgency</td><td>الوقت محدود: موعد بينتهي فيه العرض.</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>شرط أساسي:</b> لازم تكون حقيقية. ندرة مزيفة بتكسر الثقة، والثقة جزء من «احتمال النجاح» بمعادلة القيمة.</p>
+
+    <div class="tool">
+      <span class="tool-tag">تفاعلي</span>
+      <h3>اختار أدواتك</h3>
+      <div class="field"><label>نوع الندرة</label>
+        <div class="chips" id="scGroup">
+          <button class="chip" data-sc="seats">مقاعد محدودة</button>
+          <button class="chip" data-sc="bonus">مكافآت محدودة</button>
+          <button class="chip" data-sc="never">لن يتكرر</button>
+        </div></div>
+      <div class="result" id="scTxt"></div>
+      <div class="field"><label>نوع الإلحاح</label>
+        <div class="chips" id="urGroup">
+          <button class="chip" data-ur="cohort">دفعات متجددة</button>
+          <button class="chip" data-ur="season">مواسم متجددة</button>
+          <button class="chip" data-ur="price">سعر أو مكافأة بتنتهي</button>
+          <button class="chip" data-ur="explode">فرصة بتنتهي</button>
+        </div></div>
+      <div class="result" id="urTxt"></div>
+    </div>
+
+    <div class="quiz">
+      <h3>تأكّد إنك فهمت</h3>
+      <div class="q" data-explain="الندرة عن الكمية، والإلحاح عن الوقت.">
+        <p>«التسجيل بيسكّر يوم الخميس». هذا ندرة ولا إلحاح؟</p>
+        <div class="opts"><button>ندرة</button><button data-ok>إلحاح</button></div>
+        <p class="fb" hidden></p>
+      </div>
+      <div class="q" data-explain="الندرة المزيفة بتنكشف، وبتضرب الثقة اللي هي جزء من قيمة العرض.">
+        <p>ليش الندرة لازم تكون حقيقية؟</p>
+        <div class="opts"><button>لأنه القانون بيطلب هيك فقط</button><button data-ok>لأنها إذا انكشفت بتضرب الثقة، والثقة جزء من القيمة</button><button>ما في فرق</button></div>
+        <p class="fb" hidden></p>
+      </div>
+    </div>
+    <div class="apply"><h3>طبّقها على مشروعك</h3><p class="note">شو الحد الحقيقي عندك؟ كم زبون بتقدر تخدم بجودة عالية بنفس الوقت؟</p><textarea class="note-in" id="note-ch8"></textarea></div>
+  </div>
+</section>
+
+<!-- ================= CH9 ================= -->
+<section data-view="ch9" hidden>
+  <div class="ch-head"><div class="serial">CHAPTER 09 / 12</div><h2>المكافآت</h2><p class="part">الجزء الرابع · تعزيز العرض</p></div>
+  <div class="prose">
+    <p class="big">عرض واحد بسعر واحد أضعف من نفس العرض مقسوم لأجزاء، كل جزء إله اسم وقيمة.</p>
+    <div class="terms"><div class="term"><span class="ar">المكافآت</span><span class="en">Bonuses</span></div></div>
+    <h3>قواعد المكافآت</h3>
+    <ol>
+      <li>كل مكافأة بتحل اعتراض أو عقبة محددة عند الزبون.</li>
+      <li>أعطِ كل مكافأة اسم بيوصف فايدتها.</li>
+      <li>اكتب قيمة كل مكافأة لحالها، وخلّي مجموعها أكبر من قيمة المنتج الأساسي.</li>
+      <li>اعرضها واحدة واحدة، مش «ومعها كمان شوية إضافات».</li>
+      <li>ممكن تكون المكافأة منتج أو خدمة من شريك، بتفيدك وبتفيده.</li>
+    </ol>
+
+    <div class="tool">
+      <span class="tool-tag">أداة</span>
+      <h3>فاتورة القيمة</h3>
+      <div class="example-flag" id="bnFlag"><span>مثال جاهز. عدّله لمشروعك.</span></div>
+      <div class="items" id="bonusItems"></div>
+      <div class="row"><button class="btn sm" id="addBonus">أضف مكافأة</button></div>
+      <div class="field" style="max-width:220px"><label for="bnPrice">سعر العرض (دينار)</label><input type="number" id="bnPrice" min="0"></div>
+      <div class="receipt" id="receipt"></div>
+    </div>
+
+    <div class="quiz">
+      <h3>تأكّد إنك فهمت</h3>
+      <div class="q" data-explain="المكافأة اللي ما بتحل اعتراض حقيقي ما بتضيف قيمة بعين الزبون.">
+        <p>شو أهم شي بالمكافأة الجيدة؟</p>
+        <div class="opts"><button>تكون رخيصة عليك</button><button data-ok>تحل اعتراض أو عقبة محددة عند الزبون</button><button>تكون كثيرة العدد</button></div>
+        <p class="fb" hidden></p>
+      </div>
+      <div class="q" data-explain="كل مكافأة باسمها وقيمتها بترفع القيمة المتصورة أكثر من دمجها كلها بسطر واحد.">
+        <p>أي طريقة عرض أقوى؟</p>
+        <div class="opts"><button>«الدورة مع شوية إضافات»</button><button data-ok>كل مكافأة لحالها باسمها وقيمتها</button></div>
+        <p class="fb" hidden></p>
+      </div>
+    </div>
+    <div class="apply"><h3>طبّقها على مشروعك</h3><p class="note">شو أكثر 3 اعتراضات بتسمعها قبل الشراء؟ وشو مكافأة بتحل كل واحد؟</p><textarea class="note-in" id="note-ch9"></textarea></div>
+  </div>
+</section>
+
+<!-- ================= CH10 ================= -->
+<section data-view="ch10" hidden>
+  <div class="ch-head"><div class="serial">CHAPTER 10 / 12</div><h2>الضمانات</h2><p class="part">الجزء الرابع · تعزيز العرض</p></div>
+  <div class="prose">
+    <p class="big">أكبر خوف عند الزبون إنه يدفع وما يستفيد. الضمان بينقل هالخطر منه إلك.</p>
+    <p>الضمان القوي بيرفع «احتمال النجاح المتصوَّر». وحسب تجربة الكاتب، الزيادة بالمبيعات غالبًا أكبر بكثير من الزيادة بطلبات الاسترجاع.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>النوع</th><th>بالإنجليزي</th><th>الفكرة</th></tr></thead>
+      <tbody>
+        <tr><td>ضمان بدون شروط</td><td class="en-cell">Unconditional</td><td>مش عاجبك؟ فلوسك بترجع، بدون أسئلة.</td></tr>
+        <tr><td>ضمان بشروط</td><td class="en-cell">Conditional</td><td>إذا عملت المطلوب وما وصلت للنتيجة، بتاخذ تعويض أكبر: استرجاع، أو نكمل معك مجانًا.</td></tr>
+        <tr><td>عكس الضمان</td><td class="en-cell">Anti-Guarantee</td><td>كل البيع نهائي، مع سبب واضح، مثل إنك بتسلمه أسرار أو موارد ما بترجع.</td></tr>
+        <tr><td>ضمان ضمني</td><td class="en-cell">Implied</td><td>ما بتدفع إلا على النتيجة: نسبة من الأرباح أو دفع حسب الأداء.</td></tr>
+      </tbody>
+    </table></div>
+    <p>وبتقدر تكدّس أكثر من ضمان: مثلًا استرجاع خلال أول أسبوع بدون شروط، وبعده ضمان مشروط على النتيجة.</p>
+
+    <div class="tool">
+      <span class="tool-tag">أداة</span>
+      <h3>اكتب ضمانك</h3>
+      <div class="chips" id="gType">
+        <button class="chip" data-g="uncond">بدون شروط</button>
+        <button class="chip" data-g="cond">بشروط</button>
+        <button class="chip" data-g="anti">عكس الضمان</button>
+        <button class="chip" data-g="implied">ضمني</button>
+      </div>
+      <div class="grid2" id="gFields">
+        <div class="field" data-for="uncond cond implied"><label for="g-what">النتيجة اللي بتضمنها</label><input type="text" id="g-what"></div>
+        <div class="field" data-for="uncond cond"><label for="g-days">المدة (أيام)</label><input type="number" id="g-days" min="1"></div>
+        <div class="field" data-for="cond"><label for="g-cond">الشرط على الزبون</label><input type="text" id="g-cond"></div>
+        <div class="field" data-for="cond"><label for="g-rem">التعويض</label><input type="text" id="g-rem"></div>
+        <div class="field" data-for="anti"><label for="g-why">سبب إن البيع نهائي</label><input type="text" id="g-why"></div>
+      </div>
+      <div class="result"><span class="note">ضمانك</span><p class="v" id="gOut" style="font-size:1.15rem;line-height:1.8"></p></div>
+    </div>
+
+    <div class="quiz">
+      <h3>تأكّد إنك فهمت</h3>
+      <div class="q" data-explain="الضمان المشروط بيطلب من الزبون يعمل خطوات محددة، وبالمقابل التعويض ممكن يكون أكبر.">
+        <p>«إذا حضرت كل الجلسات وحليت كل الواجبات وما نجحت، بنرجعلك ضعف المبلغ». شو نوع هالضمان؟</p>
+        <div class="opts"><button>بدون شروط</button><button data-ok>بشروط</button><button>ضمني</button></div>
+        <p class="fb" hidden></p>
+      </div>
+      <div class="q" data-explain="الضمان بيقلل الخطر على الزبون فبيرفع ثقته، وهذا «احتمال النجاح المتصوَّر».">
+        <p>أي عنصر من معادلة القيمة بيرفعه الضمان مباشرة؟</p>
+        <div class="opts"><button>مدة الانتظار</button><button data-ok>احتمال النجاح المتصوَّر</button><button>النتيجة الحلم</button></div>
+        <p class="fb" hidden></p>
+      </div>
+    </div>
+    <div class="apply"><h3>طبّقها على مشروعك</h3><p class="note">شو أقوى ضمان بتقدر تلتزم فيه بدون ما يضرك لو أغلب الزبائن طلبوه؟</p><textarea class="note-in" id="note-ch10"></textarea></div>
+  </div>
+</section>
+
+<!-- ================= CH11 ================= -->
+<section data-view="ch11" hidden>
+  <div class="ch-head"><div class="serial">CHAPTER 11 / 12</div><h2>تسمية العرض</h2><p class="part">الجزء الرابع · تعزيز العرض</p></div>
+  <div class="prose">
+    <p class="big">الاسم هو أول شي الزبون بيشوفه. اسم واضح بيبيع العرض قبل ما يقرأ التفاصيل.</p>
+    <p>الكتاب بيعطي معادلة من خمس عناصر، حروفها الأولى بالإنجليزي بتشكل كلمة «ماجيك». استخدم من 3 إلى 5 منهم:</p>
+    <div class="tbl"><table>
+      <thead><tr><th>الحرف</th><th>بالإنجليزي</th><th>العنصر</th><th>مثال</th></tr></thead>
+      <tbody>
+        <tr><td class="en-cell">M</td><td class="en-cell">Make a magnetic reason why</td><td>سبب جذاب للعرض الآن</td><td>دفعة الافتتاح، عرض الصيف</td></tr>
+        <tr><td class="en-cell">A</td><td class="en-cell">Announce your avatar</td><td>أعلن مين الجمهور</td><td>لطلاب سنة رابعة طب</td></tr>
+        <tr><td class="en-cell">G</td><td class="en-cell">Give them a goal</td><td>حدد الهدف</td><td>اجتياز امتحان الباطنية</td></tr>
+        <tr><td class="en-cell">I</td><td class="en-cell">Indicate a time interval</td><td>حدد المدة</td><td>في 30 يوم</td></tr>
+        <tr><td class="en-cell">C</td><td class="en-cell">Complete with a container word</td><td>اختم بكلمة وعاء</td><td>تحدي، برنامج، معسكر</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>ملاحظة مهمة:</b> مع الوقت السوق بيتعب من نفس الإعلان. لما يصير هيك، غيّر الاسم والسبب الجذاب، مش لازم تغيّر العرض نفسه.</p>
+
+    <div class="tool">
+      <span class="tool-tag">أداة</span>
+      <h3>مولّد اسم العرض</h3>
+      <div class="grid2">
+        <div class="field"><label for="m-c">كلمة الوعاء</label><input type="text" id="m-c"></div>
+        <div class="field"><label for="m-g">الهدف</label><input type="text" id="m-g"></div>
+        <div class="field"><label for="m-i">المدة</label><input type="text" id="m-i"></div>
+        <div class="field"><label for="m-a">الجمهور</label><input type="text" id="m-a"></div>
+        <div class="field"><label for="m-m">السبب الجذاب</label><input type="text" id="m-m"></div>
+      </div>
+      <div class="field"><label>كلمات وعاء جاهزة</label><div class="chips" id="containers"></div></div>
+      <div class="result"><span class="note">اسم عرضك</span><p class="v" id="mOut"></p><span class="note" id="mCount"></span></div>
+    </div>
+
+    <div class="quiz">
+      <h3>تأكّد إنك فهمت</h3>
+      <div class="q" data-explain="كلمة الوعاء بتعطي العرض شكل: تحدي، برنامج، معسكر، خطة.">
+        <p>بالاسم «معسكر الـ14 يوم لاجتياز الباطنية»، شو كلمة الوعاء؟</p>
+        <div class="opts"><button data-ok>معسكر</button><button>الـ14 يوم</button><button>الباطنية</button></div>
+        <p class="fb" hidden></p>
+      </div>
+      <div class="q" data-explain="لما الإعلان يتعب، بتغيّر الاسم والسبب الجذاب وبيرجع العرض جديد بعين السوق.">
+        <p>العرض صار يجيب نتائج أقل لأن الناس شبعت منه. شو أول شي تجربه؟</p>
+        <div class="opts"><button>تبني منتج جديد من الصفر</button><button data-ok>تغيّر الاسم والسبب الجذاب</button><button>توقف الإعلان</button></div>
+        <p class="fb" hidden></p>
+      </div>
+    </div>
+    <div class="apply"><h3>طبّقها على مشروعك</h3><p class="note">اكتب 3 أسماء بديلة لعرضك، كل واحد بسبب جذاب مختلف.</p><textarea class="note-in" id="note-ch11"></textarea></div>
+  </div>
+</section>
+
+<!-- ================= CH12 ================= -->
+<section data-view="ch12" hidden>
+  <div class="ch-head"><div class="serial">CHAPTER 12 / 12</div><h2>ورقة عرضك</h2><p class="part">الجزء الخامس · التنفيذ</p></div>
+  <div class="prose">
+    <p class="big">العرض مش شي بتكتبه مرة وبتخلص. بتطرحه، بتسمع، بتعدّل.</p>
+    <p>كل اللي كتبته بالأدوات والملاحظات متجمع هون بورقة وحدة. انسخها وخليها مرجعك وأنت بتبني عرضك الحقيقي.</p>
+    <div class="tool">
+      <span class="tool-tag">ورقتك</span>
+      <h3 id="sheetTitle">عرضك</h3>
+      <div class="sheet" id="sheet"></div>
+      <div class="row"><button class="btn sm" id="copySheet">انسخ الورقة</button><span class="note" id="copyMsg"></span></div>
+    </div>
+    <h3>خطوات التنفيذ</h3>
+    <ol>
+      <li>اعرض العرض على 10 زبائن حقيقيين قبل ما تصرف على الإعلانات.</li>
+      <li>سجّل كل اعتراض بتسمعه، وحوّله لمكافأة أو جزء من الضمان.</li>
+      <li>تابع نسبة الإغلاق: من كل 10 بيسمعوا العرض، كم بيشتري؟</li>
+      <li>إذا الكل بيقول نعم بسرعة، غالبًا السعر قليل. ارفعه.</li>
+      <li>لما يتعب الإعلان، غيّر الاسم والسبب الجذاب.</li>
+    </ol>
+    <p>بعد ما يصير عندك عرض بيبيع، السؤال الجاي: كيف تجيب ناس أكثر يشوفوه؟ هذا موضوع الكتاب الثاني لنفس الكاتب:</p>
+    <span class="en" style="font-size:.9rem">$100M Leads — Alex Hormozi</span>
+    <div class="apply"><h3>آخر سؤال</h3><p class="note">شو أول خطوة رح تعملها هالأسبوع على عرضك؟</p><textarea class="note-in" id="note-ch12"></textarea></div>
+  </div>
+</section>
+
+<div class="ch-foot" id="chFoot" hidden>
+  <a class="btn ghost sm" id="prevBtn" href="#home">السابق</a>
+  <button class="btn sm done-btn" id="doneBtn" aria-pressed="false">أنهيت هذا الفصل</button>
+  <a class="btn sm" id="nextBtn" href="#ch2">التالي</a>
+</div>
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+const KEY='offers-companion-v1';
+const DEF={done:{},notes:{},
+  mk:{name:'طلاب الطب قبل الامتحانات النهائية',pain:8,power:5,target:9,grow:6},
+  pr:{p:40,c:10,n:100,p2:80,l:30},
+  v:{d:6,l:4,t:7,e:7},
+  example:true,
+  dream:'أنجح بامتحان الباطنية بعلامة عالية وبدون ما أضيع وقت',
+  items:[
+    {p:'ما بعرف من وين أبدأ، المادة ضخمة',t:'effort',s:'كيف تذاكر الباطنية بخطة يومية جاهزة',v:'ملف خطة دراسة جاهز',cost:1,val:4},
+    {p:'جربت دورات قبل وما استفدت',t:'likely',s:'كيف تتأكد إنك فاهم قبل الامتحان',v:'بنك أسئلة مع شرح لكل جواب',cost:2,val:5},
+    {p:'الوقت قبل الامتحان قصير',t:'time',s:'كيف تغطي الأهم أولًا خلال 30 يوم',v:'ملخصات عالية المردود',cost:2,val:4},
+    {p:'ما في حدا أسأله لما أعلق',t:'effort',s:'كيف تاخذ جواب لسؤالك خلال 24 ساعة',v:'مجموعة دعم مع مشرف',cost:3,val:4},
+    {p:'بدي متابعة شخصية',t:'likely',s:'كيف تاخذ خطة مخصصة إلك',v:'جلسة فردية أسبوعية',cost:5,val:2},
+    {p:'مش متأكد إنها بتستاهل السعر',t:'dream',s:'كيف تشوف نتائج طلاب قبلك',v:'قصص ودرجات طلاب سابقين',cost:1,val:3}
+  ],
+  bonuses:[{n:'الدورة الأساسية: 20 محاضرة',val:120},{n:'بنك أسئلة مع شرح',val:60},{n:'خطة الـ30 يوم',val:25},{n:'جلسة مراجعة ليلة الامتحان',val:40}],
+  bnPrice:90,
+  sc:'seats',ur:'cohort',
+  g:{type:'cond',what:'تنجح بامتحان الباطنية',days:30,cond:'حضرت كل الجلسات وحليت كل أسئلة البنك',rem:'بتحضر الدفعة الجاية مجانًا',why:'بتاخذ كل المواد والملفات من أول يوم'},
+  m:{c:'تحدي',g:'اجتياز امتحان الباطنية',i:'في 30 يوم',a:'لطلاب سنة رابعة طب',m:'دفعة الافتتاح'}
+};
+let S;
+try{S=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){S=null}
+S=Object.assign(JSON.parse(JSON.stringify(DEF)),S||{});
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=n=>Math.round(n).toLocaleString('en-US');
+
+/* ---------- routing ---------- */
+const order=['home','ch1','ch2','ch3','ch4','ch5','ch6','ch7','ch8','ch9','ch10','ch11','ch12'];
+const views=$$('[data-view]');
+function route(){
+  let id=location.hash.slice(1)||'home'; if(!order.includes(id)) id='home';
+  views.forEach(v=>v.hidden=v.dataset.view!==id);
+  $$('#rail a').forEach(a=>a.getAttribute('href')==='#'+id?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
+  const foot=$('#chFoot'); foot.hidden=id==='home';
+  if(id!=='home'){
+    const i=order.indexOf(id);
+    $('#prevBtn').href='#'+order[i-1]; $('#prevBtn').textContent=i===1?'البداية':'السابق';
+    const nb=$('#nextBtn'); nb.hidden=i===order.length-1; if(i<order.length-1) nb.href='#'+order[i+1];
+    const d=$('#doneBtn'); d.dataset.ch=id; d.setAttribute('aria-pressed',S.done[id]?'true':'false'); d.textContent=S.done[id]?'✓ أنهيت هذا الفصل':'أنهيت هذا الفصل';
+    const cur=$('#rail a[aria-current]'); if(cur&&cur.scrollIntoView&&window.innerWidth<900) cur.scrollIntoView({block:'nearest',inline:'center'});
+  }
+  if(id==='ch7') renderMatrix();
+  if(id==='ch12') renderSheet();
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',route);
+$('#doneBtn').addEventListener('click',e=>{const ch=e.currentTarget.dataset.ch;S.done[ch]=!S.done[ch];save();progress();route();});
+function progress(){
+  const n=order.slice(1).filter(c=>S.done[c]).length;
+  $('#progTxt').textContent=n+' من 12 فصل';
+  $('#progBar').style.width=(n/12*100)+'%';
+  $$('#rail a').forEach(a=>a.classList.toggle('done',!!S.done[a.getAttribute('href').slice(1)]));
+  $$('#partsMap a').forEach(a=>a.classList.toggle('done',!!S.done[a.dataset.ch]));
+  const next=order.slice(1).find(c=>!S.done[c]);
+  const sb=$('#startBtn'); if(n>0&&next){sb.href='#'+next;sb.textContent='كمّل من حيث وقفت';} else if(!next){sb.href='#ch12';sb.textContent='افتح ورقة عرضك';}
+}
+
+/* ---------- notes ---------- */
+$$('.note-in').forEach(t=>{t.value=S.notes[t.id]||'';t.addEventListener('input',()=>{S.notes[t.id]=t.value;save();});});
+
+/* ---------- quizzes ---------- */
+$$('.q').forEach(q=>{
+  q.querySelectorAll('.opts button').forEach(b=>b.addEventListener('click',()=>{
+    q.querySelectorAll('.opts button').forEach(x=>x.classList.remove('right','wrong'));
+    const ok=b.hasAttribute('data-ok');
+    b.classList.add(ok?'right':'wrong');
+    if(!ok) q.querySelector('[data-ok]').classList.add('right');
+    const fb=q.querySelector('.fb'); fb.hidden=false;
+    fb.textContent=(ok?'صح. ':'مش هيك بالضبط. ')+q.dataset.explain;
+  }));
+});
+
+/* ---------- ch1 compare ---------- */
+$$('[data-cmp]').forEach(b=>b.addEventListener('click',()=>{
+  $$('[data-cmp]').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
+  $('#cmpA').hidden=b.dataset.cmp!=='a'; $('#cmpB').hidden=b.dataset.cmp!=='b';
+}));
+
+/* ---------- ch2 sort ---------- */
+const sortData=[
+  {t:'تصليح جوالات، 15 دينار للشاشة',a:'c'},
+  {t:'برنامج 6 أسابيع لأصحاب العيادات: نظام حجوزات وتذكير تلقائي، مع ضمان امتلاء 20% من المواعيد الفاضية',a:'u'},
+  {t:'دروس خصوصية رياضيات، 10 دنانير للساعة',a:'c'},
+  {t:'معسكر 14 يوم لطلاب التوجيهي في الفيزياء: جلسات يومية وبنك أسئلة وضمان إعادة مجانية',a:'u'}
+];
+const sortAns={};
+function renderSort(){
+  $('#sortBox').innerHTML=sortData.map((d,i)=>`<div class="sort-item"><span>${esc(d.t)}</span><div class="chips"><button class="chip" data-si="${i}" data-sv="c" aria-pressed="${sortAns[i]==='c'}">سلعة</button><button class="chip" data-si="${i}" data-sv="u" aria-pressed="${sortAns[i]==='u'}">فئة خاصة</button></div></div>`).join('');
+  const k=Object.keys(sortAns).length;
+  if(k===sortData.length){
+    const right=sortData.filter((d,i)=>sortAns[i]===d.a).length;
+    $('#sortRes').innerHTML=`<b>${right} من 4 صح.</b><span class="note">العروض الخاصة فيها جمهور محدد، ونتيجة محددة، ومدة، وضمان. هيك صعب تقارنها بغيرها بالسعر.</span>`;
+  }
+}
+$('#sortBox').addEventListener('click',e=>{const b=e.target.closest('[data-si]');if(!b)return;sortAns[b.dataset.si]=b.dataset.sv;renderSort();});
+renderSort();
+
+/* ---------- ch3 market ---------- */
+const mkKeys={pain:'الألم',power:'القدرة على الدفع',target:'سهولة الوصول',grow:'نمو السوق'};
+$('#mkName').value=S.mk.name; $('#mkName').addEventListener('input',e=>{S.mk.name=e.target.value;save();});
+Object.keys(mkKeys).forEach(k=>{const r=$('#mk-'+k);r.value=S.mk[k];r.addEventListener('input',()=>{S.mk[k]=+r.value;save();renderMk();});});
+function renderMk(){
+  Object.keys(mkKeys).forEach(k=>{$('#mk-'+k).nextElementSibling.textContent=S.mk[k];});
+  const tot=Object.keys(mkKeys).reduce((a,k)=>a+S.mk[k],0);
+  const weak=Object.keys(mkKeys).filter(k=>S.mk[k]<5).map(k=>mkKeys[k]);
+  let cls,txt;
+  if(tot>=30&&!weak.length){cls='ok';txt='سوق جائع. ركّز عليه وابنِ عرضك إله.';}
+  else if(tot>=22){cls='warn';txt='سوق واعد، بس في نقطة ضعف لازم تنتبه إلها.';}
+  else{cls='bad';txt='سوق صعب. فكّر بتخصص أدق أو سوق ثاني.';}
+  $('#mkRes').innerHTML=`<div class="row" style="justify-content:space-between"><span>النتيجة</span><span class="v">${tot} / 40</span></div><p><span class="pill ${cls}">${cls==='ok'?'جائع':cls==='warn'?'واعد':'ضعيف'}</span> ${txt}</p>${weak.length?`<p class="note">نقاط ضعف: ${weak.join('، ')}</p>`:''}`;
+}
+renderMk();
+
+/* ---------- ch4 cycle ---------- */
+const cyc=[
+  ['سعر أعلى','بتطلب سعر يعكس القيمة الحقيقية للنتيجة، مش سعر المنافسين.'],
+  ['ربح أكبر','نفس عدد الزبائن، بس الهامش أكبر بكثير.'],
+  ['خدمة أفضل','الربح الإضافي بيروح على دعم أكثر، فريق أحسن، أدوات أفضل.'],
+  ['زبون ملتزم','اللي دفع مبلغ بيحسّه بيحضر وبيطبّق وبياخذها بجد.'],
+  ['نتائج أقوى','خدمة أفضل مع زبون ملتزم يعني نتائج أحسن بوضوح.'],
+  ['سمعة وشهادات','النتائج بتجيب قصص نجاح، والقصص بتبرر السعر العالي وبترفعه.']
+];
+(function(){
+  const box=$('#cycle');
+  cyc.forEach((c,i)=>{
+    const a=(i*60-90)*Math.PI/180, r=38;
+    const b=document.createElement('button');
+    b.style.left=(50+r*Math.cos(a))+'%'; b.style.top=(50+r*Math.sin(a))+'%';
+    b.textContent=c[0]; b.setAttribute('aria-pressed',i===0?'true':'false');
+    b.addEventListener('click',()=>{box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');showCyc(i);});
+    box.appendChild(b);
+  });
+  showCyc(0);
+})();
+function showCyc(i){ $('#cycleTxt').innerHTML=`<b>${i+1}. ${cyc[i][0]}</b><span>${cyc[i][1]}</span><span class="note">بعدها: ${cyc[(i+1)%6][0]}</span>`; }
+
+/* ---------- ch4 price ---------- */
+['p','c','n','p2','l'].forEach(k=>{const el=$('#pr-'+k);el.value=S.pr[k];el.addEventListener('input',()=>{S.pr[k]=+el.value||0;save();renderPr();});});
+function renderPr(){
+  const {p,c,n,p2,l}=S.pr;
+  const old=n*(p-c), nn=n*(1-l/100), neu=nn*(p2-c);
+  const be=p2>c?Math.max(0,(1-(p-c)/(p2-c))*100):0;
+  const diff=neu-old;
+  $('#prRes').innerHTML=`
+    <div class="row" style="justify-content:space-between"><span>الربح الحالي شهريًا</span><b>${fmt(old)} دينار</b></div>
+    <div class="row" style="justify-content:space-between"><span>الربح بعد رفع السعر (${fmt(nn)} زبون)</span><b>${fmt(neu)} دينار</b></div>
+    <p><span class="pill ${diff>=0?'ok':'bad'}">${diff>=0?'ربح أعلى':'ربح أقل'}</span> الفرق: ${diff>=0?'+':'−'}${fmt(Math.abs(diff))} دينار</p>
+    <p class="note">${p2>p?`بتقدر تخسر لحد <b>${be.toFixed(0)}%</b> من زبائنك وتضل بنفس الربح، وبتشتغل مع عدد أقل.`:'السعر الجديد لازم يكون أعلى من الحالي.'}</p>`;
+}
+renderPr();
+
+/* ---------- ch5 value ---------- */
+const vk={d:'v-d',l:'v-l',t:'v-t',e:'v-e'};
+Object.entries(vk).forEach(([k,id])=>{const r=$('#'+id);r.value=S.v[k];r.addEventListener('input',()=>{S.v[k]=+r.value;save();renderV();});});
+$$('[data-preset]').forEach(b=>b.addEventListener('click',()=>{
+  S.v=b.dataset.preset==='gs'?{d:9,l:8,t:2,e:2}:{d:6,l:4,t:7,e:7};
+  Object.entries(vk).forEach(([k,id])=>$('#'+id).value=S.v[k]); save(); renderV();
+}));
+function renderV(){
+  Object.entries(vk).forEach(([k,id])=>$('#'+id).nextElementSibling.textContent=S.v[k]);
+  const {d,l,t,e}=S.v, val=(d*l)/(t*e);
+  $('#vScore').textContent=val>=10?val.toFixed(0):val.toFixed(1);
+  const pos=Math.min(100,Math.max(0,(Math.log10(val)+2)/4*100));
+  $('#vMark').style.left='calc('+pos+'% - 2px)';
+  const bad={d:10-d,l:10-l,t:t-1,e:e-1};
+  const w=Object.keys(bad).sort((a,b)=>bad[b]-bad[a])[0];
+  const tips={d:'الأضعف: النتيجة الحلم. كبّر الوعد واربطه بالمكانة: كيف رح يتغير نظرة الناس إله؟',
+    l:'الأضعف: احتمال النجاح. أضف نتائج سابقة، شهادات، ضمان، وطريقة واضحة خطوة بخطوة.',
+    t:'الأضعف: مدة الانتظار. صمّم مكسب سريع يحسّه الزبون بأول أيام.',
+    e:'الأضعف: الجهد. حوّل جزء من الخدمة لـ «نعملها عنك» أو «نعملها معك».'};
+  const lvl=val<1?'<span class="pill bad">ضعيف</span>':val<4?'<span class="pill warn">مقبول</span>':val<15?'<span class="pill ok">قوي</span>':'<span class="pill ok">لا يُرفض</span>';
+  $('#vTip').innerHTML=lvl+' '+(bad[w]<=1?'كل العناصر قوية. هذا عرض صعب ينرفض.':tips[w]);
+}
+renderV();
+
+/* ---------- ch6 builder ---------- */
+const TYPES={dream:'النتيجة الحلم',likely:'احتمال النجاح',time:'مدة الانتظار',effort:'الجهد'};
+$('#dream').value=S.dream; $('#dream').addEventListener('input',e=>{S.dream=e.target.value;save();});
+function renderItems(){
+  $('#exFlag').hidden=!S.example;
+  $('#items').innerHTML=S.items.map((it,i)=>`
+   <div class="item" data-i="${i}">
+     <div class="item-h"><b>#${i+1}</b><button class="x" data-del="${i}">حذف</button></div>
+     <div class="field"><label for="it-p-${i}">المشكلة أو العقبة</label><input type="text" id="it-p-${i}" data-k="p" value="${esc(it.p)}"></div>
+     <div class="f3">
+       <div class="field"><label for="it-t-${i}">نوع الشك</label><select id="it-t-${i}" data-k="t">${Object.entries(TYPES).map(([k,v])=>`<option value="${k}"${it.t===k?' selected':''}>${v}</option>`).join('')}</select></div>
+       <div class="field" style="grid-column:span 2"><label for="it-s-${i}">الحل بصيغة «كيف ...»</label><input type="text" id="it-s-${i}" data-k="s" value="${esc(it.s)}" placeholder="كيف ..."></div>
+     </div>
+     <div class="field"><label for="it-v-${i}">طريقة التوصيل</label><input type="text" id="it-v-${i}" data-k="v" value="${esc(it.v)}"></div>
+     <div class="grid2">
+       <div class="field"><label for="it-c-${i}">التكلفة عليك</label><div class="slider-row"><input type="range" min="1" max="5" id="it-c-${i}" data-k="cost" value="${it.cost}"><output>${it.cost}</output></div></div>
+       <div class="field"><label for="it-val-${i}">القيمة عند الزبون</label><div class="slider-row"><input type="range" min="1" max="5" id="it-val-${i}" data-k="val" value="${it.val}"><output>${it.val}</output></div></div>
+     </div>
+   </div>`).join('') || '<p class="note">ما في مشاكل بعد. أضف أول عقبة بيواجهها زبونك.</p>';
+}
+$('#items').addEventListener('input',e=>{
+  const el=e.target, box=el.closest('.item'); if(!box||!el.dataset.k) return;
+  const it=S.items[+box.dataset.i], k=el.dataset.k;
+  it[k]=(k==='cost'||k==='val')?+el.value:el.value;
+  if(el.type==='range') el.nextElementSibling.textContent=el.value;
+  save();
+});
+$('#items').addEventListener('change',e=>{if(e.target.tagName==='SELECT'){const box=e.target.closest('.item');S.items[+box.dataset.i].t=e.target.value;save();}});
+$('#items').addEventListener('click',e=>{const b=e.target.closest('[data-del]');if(!b)return;S.items.splice(+b.dataset.del,1);save();renderItems();});
+$('#addItem').addEventListener('click',()=>{S.items.push({p:'',t:'effort',s:'',v:'',cost:3,val:3});save();renderItems();const n=S.items.length-1;const el=$('#it-p-'+n);el&&el.focus();});
+$('#clearEx').addEventListener('click',()=>{S.example=false;S.dream='';S.items=[{p:'',t:'effort',s:'',v:'',cost:3,val:3}];$('#dream').value='';save();renderItems();});
+renderItems();
+
+/* ---------- ch7 matrix ---------- */
+function verdict(it){ if(it.val>=3&&it.cost<=3) return ['احتفظ','ok']; if(it.val>=3) return ['احتفظ بحذر','warn']; if(it.cost<=3) return ['مكافأة أو احذف','warn']; return ['احذف','bad']; }
+function renderMatrix(){
+  const P=46,W=340,inner=W-P-20;
+  const X=c=>P+(c-0.5)/5*inner, Y=v=>20+(5.5-v)/5*inner;
+  const mid=X(3.5), midY=Y(3.5);
+  let s=`<rect x="${P}" y="20" width="${inner}" height="${inner}" fill="var(--paper)" stroke="var(--line)"/>
+   <rect x="${P}" y="20" width="${mid-P}" height="${midY-20}" fill="var(--green-soft)"/>
+   <rect x="${mid}" y="${midY}" width="${P+inner-mid}" height="${20+inner-midY}" fill="var(--red-soft)"/>
+   <line x1="${mid}" y1="20" x2="${mid}" y2="${20+inner}" stroke="var(--line)" stroke-dasharray="3 3"/>
+   <line x1="${P}" y1="${midY}" x2="${P+inner}" y2="${midY}" stroke="var(--line)" stroke-dasharray="3 3"/>
+   <text x="${(P+mid)/2}" y="38" text-anchor="middle" font-size="11" fill="var(--green)" font-weight="700">احتفظ</text>
+   <text x="${(mid+P+inner)/2}" y="38" text-anchor="middle" font-size="11" fill="var(--brass)" font-weight="700">احتفظ بحذر</text>
+   <text x="${(P+mid)/2}" y="${12+inner}" text-anchor="middle" font-size="11" fill="var(--brass)" font-weight="700">مكافأة صغيرة</text>
+   <text x="${(mid+P+inner)/2}" y="${12+inner}" text-anchor="middle" font-size="11" fill="var(--red)" font-weight="700">احذف</text>
+   <text x="${P+inner/2}" y="${W-4}" text-anchor="middle" font-size="11" fill="var(--ink-soft)">التكلفة عليك: قليلة ← → عالية</text>
+   <text x="14" y="${20+inner/2}" text-anchor="middle" font-size="11" fill="var(--ink-soft)" transform="rotate(-90 14 ${20+inner/2})">القيمة عند الزبون</text>`;
+  const seen={};
+  S.items.forEach((it,i)=>{
+    const key=it.cost+'-'+it.val; const k=seen[key]=(seen[key]||0)+1;
+    const off=(k-1)*14;
+    const cx=X(it.cost)+off-(k>1?7:0), cy=Y(it.val);
+    const [,cls]=verdict(it); const col=cls==='ok'?'var(--green)':cls==='bad'?'var(--red)':'var(--brass)';
+    s+=`<circle cx="${cx}" cy="${cy}" r="11" fill="${col}"/><text x="${cx}" y="${cy+4}" text-anchor="middle" font-size="11" fill="var(--card)" font-weight="700" font-family="IBM Plex Mono, monospace">${i+1}</text>`;
+  });
+  $('#matrix').innerHTML=s;
+  $('#stackList').innerHTML=S.items.map((it,i)=>{const [t,c]=verdict(it);return `<li><span><b>#${i+1}</b> ${esc(it.v||it.s||it.p||'بدون اسم')}</span><span class="pill ${c}">${t}</span></li>`;}).join('')||'<li class="note">أضف حلول بالفصل السابق.</li>';
+}
+
+/* ---------- ch8 scarcity/urgency ---------- */
+const SC={seats:'25 مقعد فقط بهالدفعة، لأنه المشرف بيقدر يتابع هالعدد بجودة.',bonus:'أول 10 مسجلين بياخذوا جلسة مراجعة فردية مجانًا.',never:'هالنسخة من الدورة ما رح تنعاد بنفس الشكل بعد هالفصل.'};
+const UR={cohort:'التسجيل بيسكّر الخميس، والدفعة الجاية بعد شهر.',season:'عرض بداية الفصل الدراسي بينتهي بآخر الأسبوع الأول.',price:'السعر الحالي ساري لحد يوم الجمعة، بعدها بيرجع للسعر الكامل.',explode:'العرض متاح 48 ساعة بعد الجلسة التعريفية فقط.'};
+function renderSU(){
+  $$('#scGroup .chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.sc===S.sc));
+  $$('#urGroup .chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.ur===S.ur));
+  $('#scTxt').innerHTML='<span class="note">مثال جاهز للاستخدام</span><b>'+esc(SC[S.sc])+'</b>';
+  $('#urTxt').innerHTML='<span class="note">مثال جاهز للاستخدام</span><b>'+esc(UR[S.ur])+'</b>';
+}
+$('#scGroup').addEventListener('click',e=>{const b=e.target.closest('[data-sc]');if(b){S.sc=b.dataset.sc;save();renderSU();}});
+$('#urGroup').addEventListener('click',e=>{const b=e.target.closest('[data-ur]');if(b){S.ur=b.dataset.ur;save();renderSU();}});
+renderSU();
+
+/* ---------- ch9 bonuses ---------- */
+$('#bnPrice').value=S.bnPrice; $('#bnPrice').addEventListener('input',e=>{S.bnPrice=+e.target.value||0;save();renderReceipt();});
+function renderBonus(){
+  $('#bonusItems').innerHTML=S.bonuses.map((b,i)=>`<div class="item" data-b="${i}"><div class="item-h"><b>${i===0?'الأساس':'مكافأة '+i}</b>${i?`<button class="x" data-bdel="${i}">حذف</button>`:''}</div>
+   <div class="f3"><div class="field" style="grid-column:span 2"><label for="bn-n-${i}">الاسم</label><input type="text" id="bn-n-${i}" data-bk="n" value="${esc(b.n)}"></div>
+   <div class="field"><label for="bn-v-${i}">القيمة (دينار)</label><input type="number" id="bn-v-${i}" data-bk="val" value="${b.val}" min="0"></div></div></div>`).join('');
+  renderReceipt();
+}
+$('#bonusItems').addEventListener('input',e=>{const el=e.target,box=el.closest('[data-b]');if(!box||!el.dataset.bk)return;S.bonuses[+box.dataset.b][el.dataset.bk]=el.dataset.bk==='val'?(+el.value||0):el.value;save();renderReceipt();});
+$('#bonusItems').addEventListener('click',e=>{const b=e.target.closest('[data-bdel]');if(!b)return;S.bonuses.splice(+b.dataset.bdel,1);save();renderBonus();});
+$('#addBonus').addEventListener('click',()=>{S.bonuses.push({n:'',val:0});save();renderBonus();});
+function renderReceipt(){
+  const tot=S.bonuses.reduce((a,b)=>a+(+b.val||0),0), core=+S.bonuses[0]?.val||0, extra=tot-core;
+  const ratio=S.bnPrice>0?tot/S.bnPrice:0;
+  $('#receipt').innerHTML=S.bonuses.map((b,i)=>`<div class="line"><span>${esc(b.n||(i?'مكافأة':'المنتج الأساسي'))}</span><span>${fmt(b.val||0)} دينار</span></div>`).join('')+
+   `<div class="line tot"><span>القيمة الإجمالية</span><s>${fmt(tot)} دينار</s></div>
+    <div class="line tot"><span>سعرك</span><span class="price">${fmt(S.bnPrice)} دينار</span></div>
+    <p class="note" style="margin-top:8px">${ratio?`الزبون بياخذ ${ratio.toFixed(1)} ضعف ما بيدفع. `:''}${extra>core?'<span class="pill ok">ممتاز</span> قيمة المكافآت أكبر من المنتج الأساسي.':'<span class="pill warn">زِدها</span> الكتاب بينصح إن مجموع المكافآت يتجاوز قيمة المنتج الأساسي.'}</p>`;
+}
+renderBonus();
+
+/* ---------- ch10 guarantee ---------- */
+const gIds={what:'g-what',days:'g-days',cond:'g-cond',rem:'g-rem',why:'g-why'};
+Object.entries(gIds).forEach(([k,id])=>{const el=$('#'+id);el.value=S.g[k];el.addEventListener('input',()=>{S.g[k]=el.value;save();renderG();});});
+$('#gType').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(b){S.g.type=b.dataset.g;save();renderG();}});
+function renderG(){
+  const g=S.g,t=g.type;
+  $$('#gType .chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.g===t));
+  $$('#gFields [data-for]').forEach(f=>f.hidden=!f.dataset.for.split(' ').includes(t));
+  const w=g.what||'...', d=g.days||'...';
+  const out={uncond:`إذا ما شفت إنك قريب إنك ${w} خلال ${d} يوم، بنرجعلك كامل المبلغ بدون أي سؤال.`,
+    cond:`إذا ${g.cond||'...'}، وما قدرت ${w} خلال ${d} يوم، ${g.rem||'...'}.`,
+    anti:`كل المبيعات نهائية، لأنك ${g.why||'...'}.`,
+    implied:`ما بتدفع إلا إذا ${w}.`}[t];
+  $('#gOut').textContent=out;
+}
+renderG();
+
+/* ---------- ch11 magic ---------- */
+const mIds={c:'m-c',g:'m-g',i:'m-i',a:'m-a',m:'m-m'};
+Object.entries(mIds).forEach(([k,id])=>{const el=$('#'+id);el.value=S.m[k];el.addEventListener('input',()=>{S.m[k]=el.value;save();renderM();});});
+const CW=['تحدي','برنامج','معسكر','خطة','نظام','ورشة مكثفة','مسار سريع','تجربة','دورة','مخطط'];
+$('#containers').innerHTML=CW.map(w=>`<button class="chip" data-cw="${w}">${w}</button>`).join('');
+$('#containers').addEventListener('click',e=>{const b=e.target.closest('[data-cw]');if(!b)return;S.m.c=b.dataset.cw;$('#m-c').value=S.m.c;save();renderM();});
+function magicName(){const m=S.m;let n=[m.c,m.g,m.i,m.a].map(x=>(x||'').trim()).filter(Boolean).join(' ');if((m.m||'').trim()) n+=(n?' · ':'')+m.m.trim();return n;}
+function renderM(){
+  $$('#containers .chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.cw===S.m.c));
+  const n=magicName(); $('#mOut').textContent=n||'عبّي الحقول لتطلع الاسم';
+  const used=Object.values(S.m).filter(x=>(x||'').trim()).length;
+  $('#mCount').innerHTML=`مستخدم ${used} من 5 عناصر ${used>=3?'<span class="pill ok">كافي</span>':'<span class="pill warn">أضف عنصر أو اثنين</span>'}`;
+}
+renderM();
+
+/* ---------- ch12 sheet ---------- */
+function sheetText(){
+  const L=[]; const nm=magicName();
+  L.push('اسم العرض: '+(nm||'لم يُحدد بعد'));
+  L.push('');
+  L.push('السوق: '+(S.mk.name||'—')+' ('+(S.mk.pain+S.mk.power+S.mk.target+S.mk.grow)+' من 40)');
+  L.push('النتيجة الحلم: '+(S.dream||'—'));
+  L.push('');
+  L.push('مكونات العرض بعد التقليم:');
+  const keep=S.items.filter(it=>verdict(it)[1]!=='bad');
+  if(keep.length) keep.forEach(it=>L.push('• '+(it.s||it.p)+(it.v?' ← '+it.v:''))); else L.push('• —');
+  L.push('');
+  L.push('فاتورة القيمة:');
+  S.bonuses.forEach(b=>L.push('• '+(b.n||'—')+': '+fmt(b.val||0)+' دينار'));
+  L.push('القيمة الإجمالية: '+fmt(S.bonuses.reduce((a,b)=>a+(+b.val||0),0))+' دينار');
+  L.push('السعر: '+fmt(S.bnPrice)+' دينار');
+  L.push('');
+  L.push('الندرة: '+SC[S.sc]);
+  L.push('الإلحاح: '+UR[S.ur]);
+  L.push('الضمان: '+$('#gOut').textContent);
+  const titles={ch1:'العرض الحالي',ch2:'المنافسون',ch3:'السوق بدقة',ch4:'السعر',ch5:'أضعف عنصر بالقيمة',ch6:'اختبار العشرة أضعاف',ch7:'ما يجب حذفه',ch8:'الحد الحقيقي',ch9:'الاعتراضات والمكافآت',ch10:'الضمان الممكن',ch11:'أسماء بديلة',ch12:'الخطوة الأولى'};
+  const notes=Object.keys(titles).filter(c=>(S.notes['note-'+c]||'').trim());
+  if(notes.length){L.push('');L.push('ملاحظاتك:');notes.forEach(c=>L.push('• '+titles[c]+': '+S.notes['note-'+c].trim()));}
+  return L.join('\n');
+}
+function renderSheet(){ $('#sheetTitle').textContent=magicName()||'عرضك'; $('#sheet').textContent=sheetText(); }
+$('#copySheet').addEventListener('click',()=>{
+  const t=sheetText();
+  const done=()=>{$('#copyMsg').textContent='انتسخت.';};
+  const fallback=()=>{const r=document.createRange();r.selectNodeContents($('#sheet'));const s=getSelection();s.removeAllRanges();s.addRange(r);$('#copyMsg').textContent='النص محدد، انسخه يدويًا.';};
+  try{navigator.clipboard.writeText(t).then(done,fallback);}catch(e){fallback();}
+});
+
+/* ---------- listen (text to speech) ---------- */
+const synth=window.speechSynthesis;
+let playing=null; // {sec, queue, idx, paused}
+function arVoice(){try{const vs=synth.getVoices();return vs.find(v=>/^ar/i.test(v.lang)&&/maged|majed|ماجد/i.test(v.name))||vs.find(v=>/^ar/i.test(v.lang));}catch(e){return null}}
+function chunksFor(sec){
+  const els=[sec.querySelector('.ch-head h2')];
+  sec.querySelectorAll('.prose > p, .prose > h3, .prose > ol > li, .prose > ul > li, .prose > .grid2 > .box, .prose > .grid4 > .box, .prose .tbl tbody tr, .prose > .formula').forEach(e=>els.push(e));
+  const out=[];
+  els.forEach(el=>{
+    if(!el||el.closest('.tool,.quiz,.apply')) return;
+    let t;
+    if(el.tagName==='TR') t=[...el.cells].filter(c=>!c.classList.contains('en-cell')).map(c=>c.innerText.trim()).join('، ');
+    else{const c=el.cloneNode(true);c.querySelectorAll('.en,.k').forEach(x=>x.remove());t=c.innerText.replace(/\s+/g,' ').trim();}
+    if(!t) return;
+    (t.match(/[^.!؟?،]{1,220}[.!؟?،]?/g)||[t]).forEach((s,i,a)=>{s=s.trim();if(s) out.push({el,t:s});});
+  });
+  return out;
+}
+function clearReading(){document.querySelectorAll('.reading').forEach(e=>e.classList.remove('reading'));}
+function stopListen(){try{synth&&synth.cancel();}catch(e){} playing=null; clearReading(); updListen();}
+function speakNext(){
+  if(!playing) return;
+  if(playing.idx>=playing.queue.length){stopListen();return;}
+  const c=playing.queue[playing.idx];
+  const u=new SpeechSynthesisUtterance(c.t);
+  const v=arVoice(); if(v) u.voice=v; u.lang=v?v.lang:'ar-SA';
+  u.rate=+(S.rate||1);
+  u.onstart=()=>{ if(!c.el.classList.contains('reading')){clearReading();c.el.classList.add('reading');c.el.scrollIntoView({block:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});} };
+  u.onend=()=>{ if(playing&&!playing.paused){playing.idx++;speakNext();} };
+  synth.speak(u);
+}
+function updListen(){
+  document.querySelectorAll('.listen').forEach(box=>{
+    const sec=box.closest('[data-view]'); const on=playing&&playing.sec===sec;
+    box.querySelector('.l-play').textContent= on&&!playing.paused?'⏸ إيقاف مؤقت':on?'▶ كمّل':'▶ اسمع الفصل';
+    box.querySelector('.l-stop').hidden=!on;
+  });
+}
+$$('[data-view]').forEach(sec=>{
+  const head=sec.querySelector('.ch-head'); if(!head) return;
+  const box=document.createElement('div'); box.className='listen';
+  box.innerHTML=`<button class="btn sm l-play">▶ اسمع الفصل</button><button class="btn sm ghost l-stop" hidden>⏹ وقّف</button>
+   <label class="note" style="flex-basis:auto" for="rate-${sec.dataset.view}">السرعة</label>
+   <select id="rate-${sec.dataset.view}" class="l-rate"><option value="0.85">أبطأ</option><option value="1">عادي</option><option value="1.15">أسرع</option><option value="1.3">سريع</option></select>
+   <span class="note l-msg" hidden></span>`;
+  head.appendChild(box);
+  const sel=box.querySelector('.l-rate'); sel.value=String(S.rate||1);
+  sel.addEventListener('change',()=>{S.rate=+sel.value;save();$$('.l-rate').forEach(s=>s.value=sel.value);});
+  box.querySelector('.l-play').addEventListener('click',()=>{
+    if(!synth){const m=box.querySelector('.l-msg');m.hidden=false;m.textContent='القراءة الصوتية مش مدعومة هون. جربها من التطبيق أو من متصفح سفاري أو كروم.';return;}
+    if(playing&&playing.sec===sec){
+      if(playing.paused){playing.paused=false;speakNext();} else {playing.paused=true;try{synth.cancel();}catch(e){}}
+      updListen();return;
+    }
+    stopListen();
+    if(!arVoice()){const m=box.querySelector('.l-msg');m.hidden=false;m.textContent='إذا الصوت طلع غريب، نزّل صوت عربي على الماك: إعدادات النظام، ثم تسهيلات الاستخدام، ثم المحتوى المنطوق، ثم صوت النظام، واختار صوت عربي مثل ماجد.';}
+    playing={sec,queue:chunksFor(sec),idx:0,paused:false};
+    updListen(); speakNext();
+  });
+  box.querySelector('.l-stop').addEventListener('click',stopListen);
+});
+try{synth&&synth.addEventListener&&synth.addEventListener('voiceschanged',()=>{});}catch(e){}
+window.addEventListener('hashchange',stopListen);
+
+progress(); route();
+})();
+</script>
+
+</body>
+</html>
