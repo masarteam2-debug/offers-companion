@@ -353,6 +353,8 @@ input[type=range]{width:100%;accent-color:var(--brass)}
   <a href="#ch11"><span class="n">11</span>تسمية العرض</a>
   <h4>الجزء الخامس · التنفيذ</h4>
   <a href="#ch12"><span class="n">12</span>ورقة عرضك</a>
+  <h4>أدوات</h4>
+  <a href="#studio"><span class="n">AD</span>استوديو الإعلان</a>
 </nav>
 
 <main>
@@ -367,6 +369,7 @@ input[type=range]{width:100%;accent-color:var(--brass)}
     <div class="row" style="margin-top:22px">
       <a class="btn" href="#ch1" id="startBtn">ابدأ الفصل الأول</a>
       <a class="btn ghost" href="#ch12">شوف ورقة عرضك</a>
+      <a class="btn ghost" href="#studio">استوديو الإعلان</a>
     </div>
   </div>
 
@@ -999,6 +1002,60 @@ input[type=range]{width:100%;accent-color:var(--brass)}
   </div>
 </section>
 
+<!-- ================= AD STUDIO ================= -->
+<section data-view="studio" hidden>
+  <div class="ch-head"><div class="serial">AD STUDIO</div><h2>استوديو الإعلان</h2><p class="part">أدوات · من جلسة المبيعات إلى إعلان جاهز</p></div>
+  <div class="prose">
+    <p>الصق تفاصيل الإعلان اللي طلّعتها جلسة المبيعات، والاستوديو بيصممه على طريقة الكتاب: الوعد، فاتورة القيمة، المكافآت، الضمان، والموعد الحقيقي. وبيعطيك تقييم وتعديلات قبل ما تنشره.</p>
+    <div class="tool">
+      <span class="tool-tag">الخطوة 1</span>
+      <h3>جيب التفاصيل من جلسة المبيعات</h3>
+      <p class="note">انسخ هالطلب والصقه بجلسة المبيعات. بيرجعلك نص جاهز بتلزقه تحت.</p>
+      <div class="row"><button class="btn sm" id="adCopyPrompt">انسخ الطلب</button><span class="note" id="adCopyMsg"></span></div>
+      <div class="field"><label for="adPaste">الصق النص اللي رجع من جلسة المبيعات</label><textarea id="adPaste" style="direction:ltr;min-height:120px;font-family:var(--mono);font-size:.82rem"></textarea></div>
+      <div class="row"><button class="btn sm" id="adLoad">صمّم الإعلان</button><span class="note" id="adLoadMsg"></span></div>
+    </div>
+    <div class="tool">
+      <span class="tool-tag">الخطوة 2</span>
+      <h3>الإعلان</h3>
+      <div class="example-flag" id="adExFlag"><span>هذا إعلان مثال. الصق تفاصيلك فوق ليتبدل.</span></div>
+      <div class="row">
+        <div class="chips" id="adFormat"><button class="chip" data-f="post">بوست</button><button class="chip" data-f="square">مربع</button><button class="chip" data-f="story">ستوري</button></div>
+        <div class="chips" id="adTheme"><button class="chip" data-t="ink">داكن وذهبي</button><button class="chip" data-t="bold">أسود وأصفر</button><button class="chip" data-t="clean">أبيض وأخضر</button></div>
+      </div>
+      <canvas id="adCanvas" style="width:100%;max-width:520px;height:auto;margin:0 auto;display:block;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,.18)"></canvas>
+      <div class="row" style="justify-content:center"><button class="btn sm" id="adDownload">نزّل الصورة</button><span class="note" id="adDlMsg"></span></div>
+    </div>
+    <div class="tool">
+      <span class="tool-tag">الخطوة 3</span>
+      <h3>تقييم الإعلان حسب الكتاب</h3>
+      <div class="result" id="adScore"></div>
+    </div>
+    <div class="tool">
+      <span class="tool-tag">تعديل يدوي</span>
+      <h3>عدّل أي تفصيل</h3>
+      <div class="grid2">
+        <div class="field"><label for="ad-headline">العنوان (اسم العرض)</label><input type="text" id="ad-headline"></div>
+        <div class="field"><label for="ad-audience">الجمهور</label><input type="text" id="ad-audience"></div>
+        <div class="field"><label for="ad-outcome">النتيجة الحلم</label><input type="text" id="ad-outcome"></div>
+        <div class="field"><label for="ad-timeframe">المدة</label><input type="text" id="ad-timeframe"></div>
+        <div class="field"><label for="ad-scarcity">الندرة</label><input type="text" id="ad-scarcity"></div>
+        <div class="field"><label for="ad-urgency">الإلحاح (الموعد)</label><input type="text" id="ad-urgency"></div>
+        <div class="field"><label for="ad-price">السعر</label><input type="number" id="ad-price" min="0"></div>
+        <div class="field"><label for="ad-currency">العملة</label><input type="text" id="ad-currency"></div>
+        <div class="field" style="grid-column:1/-1"><label for="ad-guarantee">الضمان</label><input type="text" id="ad-guarantee"></div>
+        <div class="field" style="grid-column:1/-1"><label for="ad-cta">زر الدعوة</label><input type="text" id="ad-cta"></div>
+      </div>
+      <h4>فاتورة القيمة</h4>
+      <div class="items" id="adStack"></div>
+      <div class="row"><button class="btn sm ghost" id="adAddStack">أضف مكوّن</button></div>
+      <h4>المكافآت</h4>
+      <div class="items" id="adBonus"></div>
+      <div class="row"><button class="btn sm ghost" id="adAddBonus">أضف مكافأة</button></div>
+    </div>
+  </div>
+</section>
+
 <div class="ch-foot" id="chFoot" hidden>
   <a class="btn ghost sm" id="prevBtn" href="#home">السابق</a>
   <button class="btn sm done-btn" id="doneBtn" aria-pressed="false">أنهيت هذا الفصل</button>
@@ -1081,11 +1138,11 @@ const fmt=n=>Math.round(n).toLocaleString('en-US');
 const order=['home','ch1','ch2','ch3','ch4','ch5','ch6','ch7','ch8','ch9','ch10','ch11','ch12'];
 const views=$$('[data-view]');
 function route(){
-  let id=location.hash.slice(1)||'home'; if(!order.includes(id)) id='home';
+  let id=location.hash.slice(1)||'home'; if(!order.includes(id)&&id!=='studio') id='home';
   views.forEach(v=>v.hidden=v.dataset.view!==id);
   $$('#rail a').forEach(a=>a.getAttribute('href')==='#'+id?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
-  const foot=$('#chFoot'); foot.hidden=id==='home';
-  if(id!=='home'){
+  const foot=$('#chFoot'); foot.hidden=id==='home'||id==='studio';
+  if(id!=='home'&&id!=='studio'){
     const i=order.indexOf(id);
     $('#prevBtn').href='#'+order[i-1]; $('#prevBtn').textContent=i===1?'البداية':'السابق';
     const nb=$('#nextBtn'); nb.hidden=i===order.length-1; if(i<order.length-1) nb.href='#'+order[i+1];
@@ -1094,6 +1151,7 @@ function route(){
   }
   if(id==='ch7') renderMatrix();
   if(id==='ch12') renderSheet();
+  if(id==='studio') renderAd();
   window.scrollTo(0,0);
 }
 window.addEventListener('hashchange',route);
@@ -1940,6 +1998,168 @@ async function pageCanvas(doc,n,width){
   const c=document.createElement('canvas'); c.width=vp.width; c.height=vp.height; c.style.width=width+'px';
   await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise; return c;
 }
+
+/* ---------- ad studio: paste details from the sales chat, render a designed ad on canvas ---------- */
+const AD_DEF={format:'post',theme:'ink',example:true,
+  audience:'لطلاب سنة رابعة طب',headline:'تحدي الـ30 يوم لاجتياز امتحان الباطنية',outcome:'تدخل الامتحان وأنت حالل كل نوع سؤال بيجي',timeframe:'خلال 30 يوم',
+  stack:[{name:'20 محاضرة مرتبة حسب الأسئلة الأكثر تكرارًا',value:120},{name:'بنك أسئلة مع شرح لكل جواب',value:60},{name:'خطة دراسة يومية جاهزة',value:25}],
+  bonuses:[{name:'جلسة أسئلة مباشرة كل أسبوع',objection:'ما في حدا أسأله',value:40},{name:'ملخصات ليلة الامتحان',objection:'ما عندي وقت',value:20}],
+  guarantee:'إذا حضرت الجلسات وحليت كل البنك وما نجحت، بتحضر الدفعة الجاية مجانًا',
+  scarcity:'25 مقعد فقط بهالدفعة',urgency:'التسجيل بيسكّر الخميس',price:90,currency:'دينار',cta:'احجز مقعدك على الواتساب'};
+if(!S.ad) S.ad=JSON.parse(JSON.stringify(AD_DEF));
+const AD_PROMPT=`Using the offer we built in this chat, return ONLY one JSON code block for my ad studio, no other text.
+Write all values in Arabic (Jordanian dialect for short lines). Use only real numbers, proof and deadlines I gave you. Leave a field empty if unknown.
+{
+  "format": "post",
+  "audience": "",
+  "headline": "",
+  "outcome": "",
+  "timeframe": "",
+  "stack": [{"name": "", "value": 0}],
+  "bonuses": [{"name": "", "objection": "", "value": 0}],
+  "guarantee": "",
+  "scarcity": "",
+  "urgency": "",
+  "price": 0,
+  "currency": "دينار",
+  "cta": ""
+}`;
+const THEMES={
+  ink:{bg:'#12261E',bg2:'#1B3429',fg:'#F1EFE6',soft:'#B9C6BC',acc:'#E0AE4E',accFg:'#12261E',line:'#2E4A3D',good:'#7FD1A6'},
+  bold:{bg:'#0E0E0E',bg2:'#1C1C1C',fg:'#FFFFFF',soft:'#BDBDBD',acc:'#FFD000',accFg:'#0E0E0E',line:'#333333',good:'#FFD000'},
+  clean:{bg:'#FAFAF6',bg2:'#EEF2EA',fg:'#14281F',soft:'#56685D',acc:'#1E6A4A',accFg:'#FFFFFF',line:'#D3DCCF',good:'#1E6A4A'}
+};
+const SIZES={post:[1080,1350],square:[1080,1080],story:[1080,1920]};
+const FD='"Noto Kufi Arabic","IBM Plex Sans Arabic",Tahoma,sans-serif', FB='"IBM Plex Sans Arabic",Tahoma,sans-serif';
+const num=n=>Math.round(+n||0).toLocaleString('en-US');
+function wrap(ctx,text,maxW){const words=String(text||'').split(/\s+/).filter(Boolean);const lines=[];let cur='';for(const w of words){const t=cur?cur+' '+w:w;if(ctx.measureText(t).width>maxW&&cur){lines.push(cur);cur=w;}else cur=t;}if(cur)lines.push(cur);return lines;}
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function drawAd(ctx,W,H,k,measureOnly,off=0){
+  const a=S.ad, T=THEMES[a.theme]||THEMES.ink, P=Math.round(72*Math.min(1,W/1080)), R=W-P, cw=W-2*P;
+  let y=P+off; const f=(s)=>Math.round(s*k);
+  ctx.direction='rtl'; ctx.textBaseline='alphabetic';
+  if(!measureOnly){ctx.fillStyle=T.bg;ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle=T.line;ctx.lineWidth=2;for(let i=0;i<14;i++){ctx.beginPath();ctx.arc(-60,H+60,140+i*34,0,Math.PI*2);ctx.stroke();}
+    ctx.fillStyle=T.bg;ctx.fillRect(P/2,P/2,W-P,H-P);ctx.strokeStyle=T.acc;ctx.lineWidth=3;rr(ctx,P/2,P/2,W-P,H-P,28);ctx.stroke();}
+  y+=f(10);
+  // top pill: scarcity / urgency
+  const pill=[a.scarcity,a.urgency].filter(Boolean).join(' · ');
+  if(pill){ctx.font=`700 ${f(30)}px ${FB}`;const pw=Math.min(cw,ctx.measureText(pill).width+f(48)),ph=f(58);
+    if(!measureOnly){ctx.fillStyle=T.acc;rr(ctx,R-pw,y,pw,ph,ph/2);ctx.fill();ctx.fillStyle=T.accFg;ctx.textAlign='center';ctx.fillText(pill,R-pw/2,y+ph*0.66,pw-f(24));}
+    y+=ph+f(34);}
+  if(a.audience){ctx.font=`600 ${f(34)}px ${FB}`;ctx.textAlign='right';if(!measureOnly){ctx.fillStyle=T.soft;ctx.fillText(a.audience,R,y+f(34),cw);}y+=f(56);}
+  ctx.font=`700 ${f(74)}px ${FD}`;ctx.textAlign='right';
+  for(const ln of wrap(ctx,a.headline,cw)){y+=f(96);if(!measureOnly){ctx.fillStyle=T.fg;ctx.fillText(ln,R,y);}}
+  y+=f(18);
+  const sub=[a.outcome,a.timeframe].filter(Boolean).join(' ');
+  if(sub){ctx.font=`500 ${f(38)}px ${FB}`;for(const ln of wrap(ctx,sub,cw)){y+=f(56);if(!measureOnly){ctx.fillStyle=T.acc;ctx.fillText(ln,R,y);}}}
+  y+=f(40);
+  // value receipt
+  const rows=[...(a.stack||[]).map(s=>({n:s.name,v:s.value,b:false})),...(a.bonuses||[]).map(s=>({n:s.name,v:s.value,b:true}))].filter(r=>r.n);
+  if(rows.length){
+    const top=y, rowH=f(62);
+    const boxH=f(40)+rows.length*rowH+f(150);
+    if(!measureOnly){ctx.fillStyle=T.bg2;rr(ctx,P,top,cw,boxH,22);ctx.fill();}
+    y+=f(30);
+    ctx.font=`600 ${f(31)}px ${FB}`;
+    for(const r of rows){y+=rowH;
+      if(!measureOnly){
+        const vtxt=num(r.v)+' '+(a.currency||'');
+        ctx.textAlign='left';ctx.direction='rtl';ctx.fillStyle=T.soft;const vw=ctx.measureText(vtxt).width;ctx.fillText(vtxt,P+f(28),y-f(18));
+        ctx.textAlign='right';ctx.fillStyle=r.b?T.acc:T.fg;
+        const label=(r.b?'مكافأة: ':'✓ ')+r.n;
+        ctx.fillText(label,R-f(28),y-f(18),cw-vw-f(90));
+        ctx.strokeStyle=T.line;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(P+f(28),y);ctx.lineTo(R-f(28),y);ctx.stroke();}
+    }
+    const tot=rows.reduce((s,r)=>s+(+r.v||0),0);
+    y+=f(62);
+    if(!measureOnly){ctx.font=`600 ${f(32)}px ${FB}`;ctx.textAlign='right';ctx.fillStyle=T.soft;ctx.fillText('القيمة الإجمالية',R-f(28),y);
+      const tt=num(tot)+' '+(a.currency||'');ctx.textAlign='left';ctx.fillText(tt,P+f(28),y);const tw=ctx.measureText(tt).width;ctx.strokeStyle=T.soft;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(P+f(24),y-f(11));ctx.lineTo(P+f(32)+tw,y-f(11));ctx.stroke();}
+    y+=f(70);
+    if(!measureOnly){ctx.font=`700 ${f(34)}px ${FB}`;ctx.textAlign='right';ctx.fillStyle=T.fg;ctx.fillText('سعرك اليوم',R-f(28),y);
+      ctx.font=`700 ${f(58)}px ${FD}`;ctx.textAlign='left';ctx.fillStyle=T.good;ctx.fillText(num(a.price)+' '+(a.currency||''),P+f(28),y+f(6));}
+    y=top+boxH+f(36);
+  }
+  if(a.guarantee){ctx.font=`600 ${f(31)}px ${FB}`;const gl=wrap(ctx,a.guarantee,cw-f(56));const gh=f(66)+gl.length*f(46);
+    if(!measureOnly){ctx.strokeStyle=T.acc;ctx.lineWidth=3;ctx.setLineDash([f(10),f(8)]);rr(ctx,P,y,cw,gh,20);ctx.stroke();ctx.setLineDash([]);
+      ctx.font=`700 ${f(30)}px ${FD}`;ctx.textAlign='right';ctx.fillStyle=T.acc;ctx.fillText('الضمان',R-f(28),y+f(48));
+      ctx.font=`600 ${f(31)}px ${FB}`;ctx.fillStyle=T.fg;gl.forEach((ln,i)=>ctx.fillText(ln,R-f(28),y+f(96)+i*f(46)));}
+    y+=gh+f(36);}
+  if(a.cta){const ch=f(96);
+    if(!measureOnly){ctx.fillStyle=T.acc;rr(ctx,P,y,cw,ch,ch/2);ctx.fill();ctx.font=`700 ${f(40)}px ${FD}`;ctx.textAlign='center';ctx.fillStyle=T.accFg;ctx.fillText(a.cta,W/2,y+ch*0.64,cw-f(40));}
+    y+=ch;}
+  return y+P;
+}
+async function renderAd(){
+  const [W,H]=SIZES[S.ad.format]||SIZES.post, c=$('#adCanvas');
+  try{await Promise.all(['700 40px "Noto Kufi Arabic"','600 30px "IBM Plex Sans Arabic"','700 30px "IBM Plex Sans Arabic"'].map(x=>document.fonts.load(x,'عرض')));}catch(e){}
+  c.width=W;c.height=H;const ctx=c.getContext('2d');
+  let k=1.15; while(k>0.55&&drawAd(ctx,W,H,k,true)>H) k-=0.05;
+  const used=drawAd(ctx,W,H,k,true);
+  ctx.save(); drawAd(ctx,W,H,k,false,Math.max(0,Math.round((H-used)/2))); ctx.restore();
+  renderAdScore();
+}
+function renderAdScore(){
+  const a=S.ad, cur=a.currency||'';
+  const tot=[...(a.stack||[]),...(a.bonuses||[])].reduce((s,r)=>s+(+r.value||0),0);
+  const core=(a.stack||[]).reduce((s,r)=>s+(+r.value||0),0), bon=(a.bonuses||[]).reduce((s,r)=>s+(+r.value||0),0);
+  const ratio=a.price>0?tot/a.price:0;
+  const checks=[
+    [!!(a.audience||'').trim(),'الجمهور محدد','حدد مين بالضبط: المرحلة والمشكلة.'],
+    [!!(a.outcome||'').trim(),'النتيجة الحلم واضحة','اكتب النتيجة بكلمات الزبون.'],
+    [!!(a.timeframe||'').trim(),'في مدة محددة','أضف مدة: بيقلل شك «بدها وقت».'],
+    [(a.stack||[]).filter(s=>s.name&&+s.value>0).length>=3,'فاتورة قيمة من 3 مكونات أو أكثر بقيمها','قسّم العرض لمكونات، كل وحدة باسمها وقيمتها.'],
+    [ratio>=3,`القيمة ${ratio?ratio.toFixed(1):0} ضعف السعر`,'خلي القيمة الإجمالية 3 أضعاف السعر على الأقل.'],
+    [(a.bonuses||[]).length>0&&(a.bonuses||[]).every(b=>(b.objection||'').trim()),'كل مكافأة بتحل اعتراض','اربط كل مكافأة باعتراض محدد.'],
+    [bon>=core*0.5&&bon>0,'المكافآت إلها وزن','الكتاب بينصح إن مجموع المكافآت يقرب أو يتجاوز قيمة الأساس.'],
+    [(a.guarantee||'').trim().length>25,'ضمان بشروط واضحة','اكتب الضمان: شو بتضمن، خلال قديش، شو المطلوب، وشو التعويض.'],
+    [!!(a.scarcity||'').trim()&&!!(a.urgency||'').trim(),'ندرة وإلحاح موجودين','أضف حد حقيقي للكمية وموعد حقيقي.'],
+    [!!(a.cta||'').trim(),'دعوة وحدة واضحة للتصرف','اكتب خطوة وحدة: احجز، راسلنا، سجّل.']
+  ];
+  const score=checks.filter(c=>c[0]).length;
+  const lvl=score>=9?['ok','لا يُرفض']:score>=7?['ok','قوي']:score>=5?['warn','مقبول']:['bad','ضعيف'];
+  $('#adScore').innerHTML=`<div class="row" style="justify-content:space-between"><span>النتيجة</span><span class="v">${score} / 10 <span class="pill ${lvl[0]}">${lvl[1]}</span></span></div>`+
+    checks.map(c=>`<p style="font-size:.92rem">${c[0]?'<span class="pill ok">✓</span> '+esc(c[1]):'<span class="pill warn">ناقص</span> '+esc(c[2])}</p>`).join('')+
+    `<p class="note">تذكير: الندرة والموعد والأرقام لازم يكونوا حقيقيين. ما تنشر رقم أو شهادة ما إلهم أساس.</p>`;
+}
+const AD_F=['headline','audience','outcome','timeframe','scarcity','urgency','price','currency','guarantee','cta'];
+function fillAdForm(){
+  AD_F.forEach(k=>{$('#ad-'+k).value=S.ad[k]??'';});
+  $('#adExFlag').hidden=!S.ad.example;
+  $$('#adFormat .chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===S.ad.format));
+  $$('#adTheme .chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===S.ad.theme));
+  $('#adStack').innerHTML=(S.ad.stack||[]).map((s,i)=>`<div class="item" data-i="${i}" data-l="stack"><div class="f3"><div class="field" style="grid-column:span 2"><label for="as-n-${i}">المكوّن</label><input type="text" id="as-n-${i}" data-k="name" value="${esc(s.name)}"></div><div class="field"><label for="as-v-${i}">القيمة</label><input type="number" id="as-v-${i}" data-k="value" value="${+s.value||0}"></div></div><button class="x" data-del>حذف</button></div>`).join('');
+  $('#adBonus').innerHTML=(S.ad.bonuses||[]).map((s,i)=>`<div class="item" data-i="${i}" data-l="bonuses"><div class="f3"><div class="field"><label for="ab-n-${i}">المكافأة</label><input type="text" id="ab-n-${i}" data-k="name" value="${esc(s.name)}"></div><div class="field"><label for="ab-o-${i}">الاعتراض اللي بتحله</label><input type="text" id="ab-o-${i}" data-k="objection" value="${esc(s.objection||'')}"></div><div class="field"><label for="ab-v-${i}">القيمة</label><input type="number" id="ab-v-${i}" data-k="value" value="${+s.value||0}"></div></div><button class="x" data-del>حذف</button></div>`).join('');
+}
+let adT; function adChanged(){S.ad.example=false;$('#adExFlag').hidden=true;save();clearTimeout(adT);adT=setTimeout(renderAd,150);}
+AD_F.forEach(k=>$('#ad-'+k).addEventListener('input',e=>{S.ad[k]=k==='price'?(+e.target.value||0):e.target.value;adChanged();}));
+['adStack','adBonus'].forEach(id=>{
+  $('#'+id).addEventListener('input',e=>{const box=e.target.closest('.item');if(!box||!e.target.dataset.k)return;const L=S.ad[box.dataset.l][+box.dataset.i];L[e.target.dataset.k]=e.target.dataset.k==='value'?(+e.target.value||0):e.target.value;adChanged();});
+  $('#'+id).addEventListener('click',e=>{if(!e.target.closest('[data-del]'))return;const box=e.target.closest('.item');S.ad[box.dataset.l].splice(+box.dataset.i,1);fillAdForm();adChanged();});
+});
+$('#adAddStack').addEventListener('click',()=>{(S.ad.stack=S.ad.stack||[]).push({name:'',value:0});fillAdForm();adChanged();});
+$('#adAddBonus').addEventListener('click',()=>{(S.ad.bonuses=S.ad.bonuses||[]).push({name:'',objection:'',value:0});fillAdForm();adChanged();});
+$('#adFormat').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(b){S.ad.format=b.dataset.f;save();fillAdForm();renderAd();}});
+$('#adTheme').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(b){S.ad.theme=b.dataset.t;save();fillAdForm();renderAd();}});
+$('#adCopyPrompt').addEventListener('click',()=>{
+  const ok=()=>{$('#adCopyMsg').textContent='انتسخ. الصقه بجلسة المبيعات.';};
+  const fb=()=>{$('#adPaste').value=AD_PROMPT;$('#adPaste').select();$('#adCopyMsg').textContent='ما قدرت أنسخ تلقائيًا. الطلب صار بالخانة تحت ومحدد، انسخه يدويًا.';};
+  try{navigator.clipboard.writeText(AD_PROMPT).then(ok,fb);}catch(e){fb();}
+});
+$('#adLoad').addEventListener('click',()=>{
+  const raw=$('#adPaste').value; const i=raw.indexOf('{'), j=raw.lastIndexOf('}');
+  let d; try{d=JSON.parse(raw.slice(i,j+1));}catch(e){$('#adLoadMsg').textContent='النص مش مقروء. تأكد إنك نسخت الرد كامل من أول قوس لآخر قوس.';return;}
+  const keep={format:S.ad.format,theme:S.ad.theme};
+  S.ad=Object.assign({},AD_DEF,{stack:[],bonuses:[]},keep,d,{example:false});
+  if(!SIZES[S.ad.format]) S.ad.format='post';
+  S.ad.price=+S.ad.price||0;
+  save(); fillAdForm(); renderAd(); $('#adLoadMsg').textContent='تم. الإعلان تحت.';
+});
+$('#adDownload').addEventListener('click',()=>{
+  try{const a=document.createElement('a');a.href=$('#adCanvas').toDataURL('image/png');a.download=(S.ad.headline||'ad').slice(0,40)+'.png';document.body.appendChild(a);a.click();a.remove();
+    $('#adDlMsg').textContent='إذا ما نزلت الصورة، اكبس عليها كبسة يمين واختار حفظ.';}catch(e){$('#adDlMsg').textContent='اكبس على الصورة كبسة يمين واختار حفظ.';}
+});
+fillAdForm();
 
 progress(); route();
 })();
